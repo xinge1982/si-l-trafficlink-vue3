@@ -1,115 +1,160 @@
 <template>
-    <div class="cross-name">
-        <div class="select-box">
-            <el-select v-model="crossId" filterable :placeholder="$t('home.pleaseChoose')" @change="crossIdChange()">
-                <el-option v-for="item in crossList" :key="item.crossId" :label="item.crossName" :value="item.crossId">
-                </el-option>
-            </el-select>
-        </div>
-        <!-- <img style="width: 20px;height: 20px;margin-top: 5px;" :src="require('../assets/image/screen/c/search.png')" alt=""> -->
+  <div class="cross-name">
+    <div class="select-box">
+      <el-select
+        v-model="crossId"
+        filterable
+        :placeholder="$t('home.pleaseChoose')"
+        @change="crossIdChange"
+      >
+        <el-option
+          v-for="item in crossList"
+          :key="item.crossId"
+          :label="item.crossName"
+          :value="item.crossId"
+        />
+      </el-select>
     </div>
+  </div>
 </template>
-<script>
-export default {
-    data() {
-        return {
-            crossData: '',
-            crossId: '',
-            crossList: [],
-            crossListObj: {}
-        }
-    },
-    created() {
-        this.crossData = JSON.parse(sessionStorage.getItem('crossData'));
-        this.getCrossLocation()
-    },
-    methods: {
-        crossIdChange() {
-            this.crossData = this.crossListObj[this.crossId];
-            this.$emit('change', this.crossData)
 
-        },
-        // 路口拥堵top10
+<script setup lang="ts">
+import { onMounted, ref } from 'vue'
+import http from '@/api/http'
 
-        getCrossLocation() {
-
-            var _this = this;
-            var param = {
-
-            };
-
-            this.axios.get(SERVICE_URL_v2 + '/getCrossLocation?', { params: param }).then((data) => {
-                if (this.crossData&&this.crossData.type) {
-                    this.crossList = data.data.data[this.crossData.type];
-                } else {
-                    this.crossList = WEB_TYPE == 'cross' ? data.data.data.cross : data.data.data.road;
-                }
-                
-                if (this.crossList.length > 0) {
-                    if (this.crossData&&this.crossData.crossId) {
-                        this.crossId = this.crossData.crossId;
-                    } else {
-                        this.crossId = this.crossList[0].crossId;
-                         sessionStorage.setItem('crossData', JSON.stringify(this.crossList[0]))
-                        // sessionStorage.setItem('crossData',this.crossList[0])
-                       
-                    }
-                     this.$emit('parentMethod');
-                    this.crossList.forEach(item => {
-
-                        this.crossListObj[item.crossId] = item;
-
-                    })
-                }
-
-
-            })
-        },
-    }
+interface CrossItem {
+  crossId: string | number
+  crossName: string
+  type?: string
+  [key: string]: unknown
 }
+
+interface CrossLocationResponse {
+  data?: Record<string, CrossItem[]>
+}
+
+const emit = defineEmits<{
+  change: [crossData: CrossItem]
+  parentMethod: []
+}>()
+
+const crossData = ref<CrossItem | null>(getStoredCrossData())
+const crossId = ref<string | number>('')
+const crossList = ref<CrossItem[]>([])
+const crossListObj = ref<Record<string, CrossItem>>({})
+
+function getStoredCrossData(): CrossItem | null {
+  const storedCrossData = sessionStorage.getItem('crossData')
+  if (!storedCrossData) {
+    return null
+  }
+
+  try {
+    return JSON.parse(storedCrossData) as CrossItem
+  } catch (error) {
+    console.error('Parse stored crossing data failed:', error)
+    return null
+  }
+}
+
+function crossIdChange(): void {
+  const selectedCross = crossListObj.value[String(crossId.value)]
+  if (!selectedCross) {
+    return
+  }
+
+  crossData.value = selectedCross
+  emit('change', selectedCross)
+}
+
+async function getCrossLocation(): Promise<void> {
+  try {
+    const response = await http.get<CrossLocationResponse>(
+      `${window.APP_CONFIG.SERVICE_URL_v2}/getCrossLocation`,
+    )
+    const locations = response.data?.data ?? {}
+    const listType =
+      crossData.value?.type ??
+      (window.APP_CONFIG.WEB_TYPE === 'cross' ? 'cross' : 'road')
+
+    crossList.value = locations[listType] ?? []
+    crossListObj.value = Object.fromEntries(
+      crossList.value.map((item) => [String(item.crossId), item]),
+    )
+
+    if (crossList.value.length === 0) {
+      crossId.value = ''
+      return
+    }
+
+    if (crossData.value?.crossId !== undefined) {
+      crossId.value = crossData.value.crossId
+    } else {
+      const firstCross = crossList.value[0]
+      crossData.value = firstCross
+      crossId.value = firstCross.crossId
+      sessionStorage.setItem('crossData', JSON.stringify(firstCross))
+    }
+
+    emit('parentMethod')
+  } catch (error) {
+    console.error('Load crossing locations failed:', error)
+    crossList.value = []
+    crossListObj.value = {}
+    crossId.value = ''
+  }
+}
+
+onMounted(() => {
+  void getCrossLocation()
+})
+
+defineExpose({
+  crossData,
+  crossId,
+  crossList,
+  crossListObj,
+  getCrossLocation,
+})
 </script>
+
 <style lang="scss">
 .cross-name {
+  display: flex;
+  width: 100%;
+  margin-bottom: 38px;
+
+  img {
+    width: 16px;
+    height: 16px;
+    margin-top: 10px;
+    vertical-align: center;
+  }
+
+  p {
+    flex: 1;
+    margin-left: 17px;
+    overflow: hidden;
+    font-family: 'PingFang SC', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 38px;
+    color: #fff;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .select-box {
     width: 100%;
-    margin-bottom: 38px;
-    display: flex;
 
-    img {
-        width: 16px;
-        height: 16px;
-        vertical-align: center;
-        margin-top: 10px;
+    .el-input__inner {
+      height: 35px;
+      font-size: 14px;
     }
 
-    p {
-        font-size: 14px;
-        font-family: PingFang SC;
-        font-weight: 600;
-        color: #FFFFFF;
-        line-height: 38px;
-        flex: 1;
-        margin-left: 17px;
-
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
+    .el-select .el-input.is-focus .el-input__inner {
+      border-color: #2e94e1;
     }
-
-    .select-box {
-        width: 100%;
-
-        // margin-right: 17px;
-
-        .el-input__inner {
-            height: 35px;
-
-            font-size: 14px;
-
-        }
-
-        .el-select .el-input.is-focus .el-input__inner {
-            border-color: #2E94E1;
-        }
-    }
+  }
 }
 </style>
