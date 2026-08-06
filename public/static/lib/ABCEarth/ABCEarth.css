@@ -1,0 +1,130 @@
+html,body,#map {
+    width:100%;
+    height: 100%;
+    margin: 0px;
+    overflow: hidden;
+    position: relative;
+}
+
+@font-face {
+    font-family: 'LCD';
+    src: url('./assets/font/LCD/DJB_Get_Digital.eot');
+    src: url('./assets/font/LCD/DJB_Get_Digital.eot?#iefix') format('embedded-opentype'),
+         url('./assets/font/LCD/DJB_Get_Digital.woff') format('woff'),
+         url('./assets/font/LCD/DJB_Get_Digital.ttf') format('truetype'),
+         url('./assets/font/LCD/DJB_Get_Digital.svg#MicrosoftYaHei') format('svg');
+}
+
+/* 鼠标位置显示控件3d */
+.mousePositionCtrl {
+    color: #fff;
+    font-size: 14px;
+    line-height: 30px;
+}
+div.mousePositionCtrl {
+    z-index: 1;
+    position: absolute;
+    bottom: 0px;
+    height: 28px;
+    width: 100%;
+    padding-left: 6px;
+    border: 1px solid #444;
+    background-color: rgba(47,53,60,.8);
+    text-align: left;
+}
+.cesium-button.cesium-fullscreenButton {
+    z-index: 2;
+}
+
+/*比例尺控件*/
+.distance-legend {
+    z-index: 2;
+    right: 28px!important;
+    bottom: 0px!important;
+    height: 28px!important;
+    border: 1px solid #444!important;
+    border-radius: 0px!important;
+}
+
+/* 地图右键菜单 */
+.mapContextMenu {
+    position: absolute;
+    min-width: 100px;
+    z-index: 9999;
+}
+.mapContextMenu ul {
+    width: 100%;
+    float: left;
+    border: 1px solid #2b2c2f;
+    background: rgba(43, 44, 47, .8);
+    color: #fff;
+    padding: 2px;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, .6);
+    overflow: hidden;
+    font-size: 13px;
+}
+.mapContextMenu ul li {
+    float: left;
+    clear: both;
+    height: 24px;
+    cursor: pointer;
+    line-height: 24px;
+    white-space: nowrap;
+    padding: 3px 10px;
+    width: 100%;
+    display: inline-block;
+}
+.mapContextMenu ul li:hover {
+    background: #444d59;
+}
+
+/*信息窗口样式定义*/
+.infoWindow {
+    position: absolute;
+    background-color: white;
+    -webkit-filter: drop-shadow(0 1px 4px rgba(0,0,0,0.2));
+    filter: drop-shadow(0 1px 4px rgba(0,0,0,0.2));
+    padding: 15px;
+    border-radius: 6px;
+    border: 1px solid #cccccc;
+    top: 0px;
+    /* left: -50px; */
+    /* min-width: 280px; */
+}
+.infoWindow:after, .infoWindow:before {
+    top: 100%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+}
+.infoWindow:after {
+    border-top-color: white;
+    border-width: 10px;
+    left: 50%;
+    margin-left: -10px;
+}
+.infoWindow:before {
+    border-top-color: #cccccc;
+    border-width: 11px;
+    left: 50%;
+    margin-left: -11px;
+}
+.infoWindow-closer {
+    text-decoration: none;
+    position: absolute;
+    top: 2px;
+    right: 8px;
+}
+.infoWindow-closer:after {
+    content: "x";/*content: "✖";*/
+}
+.infoWindow-title{
+    font-size: 15px;
+    text-decoration: none;
+    position: absolute;
+    top: 2px;
+    left: 8px;
+}

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>全息路网监测系统</title>
+    <link rel="shortcut icon" href="static/img/logo.png" type="image/png" />
+    <link rel="icon" href="static/img/logo.png" />
+    <link rel="stylesheet" href="static/css/fonts.css">
+    <script src="static/libs/threeBox/include.js"></script>
+    <script src="static/lib/include.js"></script>
+    <script src="static/libs/ABCCrossroads3D/ABCCrossroads3D.umd.min.js"></script>
+    <script src="static/config/config.js"></script>
+    <!--
+     Load the MapABC root loader synchronously.
+     Do not add async, defer, or type="module".
+   -->
+    <script>
+        document.write(
+            '<script type="text/javascript" src="' +
+            window.APP_CONFIG.MAP_URL +
+            'webglapi/lib?ak=' +
+            window.APP_CONFIG.mapabcglToken +
+            '&v=1.0&n=mapabc-gl-api-min-view">' +
+            '<\/script>'
+        )
+    </script>
+</head>
+<body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.js">
+    </script>
+<script>
+
+</script>
+</body>
+</html>

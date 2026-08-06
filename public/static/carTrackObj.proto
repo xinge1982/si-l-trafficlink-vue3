@@ -1,0 +1,326 @@
+syntax = "proto3";
+
+package crossserverpb;
+
+option java_package = "com.mapabc.model";
+option go_package = "/crossserverpb";
+
+message LngLat {
+  repeated double items = 1;
+}
+
+//单车轨迹信息
+message CarTrackObj {
+  string crossId = 1; //路口编号
+  int32 trackID = 2; //轨迹编号
+  int32 objectType = 3; //目标编号
+  int32 vehicleColor = 4; //车辆颜色
+  int32 vehicleType = 5; //车辆类型
+  string vehicleBrand = 6; //车辆品牌
+  string vehicleSubbrand = 7; //车辆子品牌
+  string vehicleYearBrand = 8; //车辆年款
+  string entryLane = 9; //入口车道
+  string exitLane = 10; //出口车道
+  string matchLane = 11; //匹配车道编号
+  string matchLaneName = 12; //匹配车道名称
+  double driveAngle = 13; //北向角
+  int32 entryRoad = 14; //入口道路
+  int32 exitRoad = 15; //出口道路
+  double lat = 16; //纬度
+  double lng = 17; //经度
+  repeated LngLat path = 18; //轨迹线
+  int32 plateColor = 19; //车牌颜色
+  string plateNumber = 20; //车牌号
+  int32 plateType = 21; //车牌类型
+  double speed = 22; //车速
+  double at = 23; //加速度
+  double state = 24; //状态
+  int32 crossing = 25; //是否在路口中
+  int32 fromWay = 26; //fromway
+  double areaDist = 27; //渠化内行驶距离
+  double stopLineDist = 28; //距停止线距离
+  double delayTime = 29; //延误
+  double stops = 30; //停车次数
+  double travelTime = 31; //旅行时间
+  int64 time = 32; //时间戳
+  string plateBgColor = 33; //车牌背景颜色
+  string plateTextColor = 34; //车牌文字颜色
+  string lampState = 35; //灯色
+  int32 remainTime = 36; //相位剩余时长
+  int32 lampEstimated = 37; //灯态预估
+  double driveStops = 38; //停车计数
+  double idealPassTime = 39; //理想旅行时间
+  double passTime = 40; //通过时间
+  string sectionPlanId = 41; //方案编号
+  string timePlanId = 42; //时段方案编号
+  string detectorId = 43; //检测器编号
+  int32 excludeArea = 44; //排除区域
+  int32 crossPosition = 45; //车辆位置
+  string recoveryCross = 46; //车辆轨迹路口
+  string carPointColor = 47; //车辆示意点颜色
+  string trackSign = 48; //特殊标识
+  double ridOffset = 49; //与路段终点的偏移量
+  double z = 50; //高程信息
+  int32 queueNumber = 51; //排队序号
+  double headTime = 52; //过停止线车头时距
+  int32 queueEnd = 53; //是否队尾
+  double radarSpeed = 54; //雷达速度
+  string specialVehicleType = 55; //特殊车型
+  int32 entryCongestionFlag = 56; //入口拥堵标志
+  int32 originTrackId = 57; //拼接前trackId
+  int32 queueZone = 58; //排队区号
+  int32 speedConfidence = 59; //车速置信度 0~100
+  string uniqId = 60; //车辆唯一编号
+  string metricLane = 61; //统计车道编号
+  int32 showFocus = 62; //重点关注车辆
+  string rid = 63; //rid
+  double ridKmPile = 64; //rid上对应的公里桩，高速使用
+  repeated CameraSet cameraList = 65; //车辆摄像机信息，从近到远排序
+  int32 posConfidence = 66; //位置置信度 0~100
+  string excludeEvents = 67; //用分隔符排列这个轨迹不需要检测的事件(见事件编号)，例如:|1||4||8|
+  string enforceEvents = 68; //用分隔符排列这个轨迹的强制事件(见事件编号)，例如:|1||4||8|
+  repeated TargetRect targetpos = 69; // 目标对应到相机的检测框信息列表
+  int32 systemType = 70; //类别：1：路口，2：路段
+  repeated LngLat blindZone = 71; // 盲区线
+
+}
+
+message RECT {
+  int32 LeftTopX = 1; // 左上角横坐标
+  int32 LeftTopY = 2; // 左上角纵坐标
+  int32 RightBottomX = 3; // 右下角横坐标
+  int32 RightBottomY = 4; // 右下角纵坐标
+}
+
+message TargetRect {
+  string CameraCode = 1; // 摄像机编码
+  string CameraIP = 2;   // 摄像机IP地址
+  RECT rect = 3;         // 目标检测框
+  int64 timeStampDiff = 4; // 时间戳偏差
+}
+
+//轨迹信息
+message CarTrackProp {
+  string crossId = 1;
+  string time = 2;
+  int64 timeLong = 3;
+  int32 value = 4;
+  string name = 5;
+}
+
+//显示变更信息
+message GeometryProp {
+  string id = 1;
+  string name = 2;
+  string fillColor = 3;
+  int32 type = 4;
+  double fillOpacity = 5;
+}
+
+//rid评价信息
+message CrossStat {
+  string crossId = 1; //路口编号
+  string time = 2; //时间
+  string rid = 3; //rid
+  int32 turn = 4; //转向
+  int32 dir8 = 5; //方向
+  double congestionIndex = 6; //拥堵指数
+  double spilloverIndex = 7; //溢出指数
+  double unbalanceIndex = 8; //失衡指数
+  double heathyIndex = 9; //健康评级
+  double flow = 10; //流量
+  double delayTime = 11; //延误时间
+  double stopRate = 12; //停车率
+  double flowAbility = 13; //通行能力
+  double saturation = 14; //饱和度
+  double speed = 15; //平均速度
+  double queue = 16; //排队长度
+  double carMove = 17; //运动车辆数
+  double carStop = 18; //静止车辆数
+  double cars = 19; //车辆数
+  int32 congestionFlag = 20; //拥堵标志
+  int32 spilloverFlag = 21; //溢出标志
+  int32 unbalanceFlag = 22; //失衡标志
+}
+
+//灯态信息
+message CrossLampState {
+  //路口编号
+  string crossId = 1;
+  //时间
+  string time = 2;
+  //时间戳
+  int64 timestamp = 3;
+  //灯组灯态信息
+  repeated CrossLampData crossLamp = 4;
+  //相位名称
+  string phaseName = 5;
+  //相位时长
+  int32 phaseTime = 6;
+  //周期时长
+  int32 cycleLength = 7;
+  //估算信息
+  repeated CrossLampEst crossEst = 8;
+}
+
+//灯组灯态数据
+message CrossLampData {
+  //灯组等色
+  string lampState = 1;
+  //车道编号
+  string laneId = 2;
+  //剩余时间
+  int32 remainTime = 3;
+  //下次绿灯剩余时间
+  int32 nextGreenTime = 4;
+  //灯组编号
+  int32 groupId = 5;
+  //RID
+  string rid = 6;
+  //转向编号
+  string turn = 7;
+  //类型
+  string type = 8;
+}
+
+//灯组灯态估算
+message CrossLampEst {
+  //灯组等色
+  string lampState = 1;
+  //剩余时间
+  int32 remainTime = 2;
+  //下次绿灯剩余时间
+  int32 nextGreenTime = 3;
+  //灯组编号
+  int32 groupId = 4;
+  //绿灯倾向
+  double greenBias = 5;
+  //相位
+  string phaseName = 6;
+}
+
+//统计图信息
+message CrossGraph {
+  message List {
+    repeated double data = 1;
+    string name = 2;
+    string type = 3;
+    int32 sort = 4;
+  }
+
+  message Detail {
+    repeated List list = 1;
+    string name = 2;
+  }
+
+  message Total {
+    repeated double data = 1;
+    string name = 2;
+    string type = 3;
+    int32 sort = 4;
+  }
+
+  string crossId = 1;
+  repeated Detail detail = 2;
+  string name = 3;
+  repeated string times = 4;
+  repeated Total total = 5;
+  string type = 6;
+}
+
+//摄像机信息
+message CameraSet {
+  //摄像机编号
+  string cameraCode = 1;
+  //路段编号
+  string rid = 2;
+  //类型
+  int32 deviceType = 3;
+  //摄像机名称
+  string cameraName = 4;
+}
+
+//轨迹信息
+message CarTrack {
+  //时间
+  string time = 1;
+  //时间戳
+  int64 dataTime = 2;
+  //状态
+  CarTrackProp data = 3;
+  //轨迹
+  repeated CarTrackObj track = 4;
+  //停止线显示
+  repeated GeometryProp lineString = 5;
+  //倒计时显示
+  repeated GeometryProp textPoint = 6;
+  //单路口指标
+  CrossStat crossStat = 7;
+  //单路口灯态
+  CrossLampState lampStatus = 8;
+  //数据标志
+  string status = 9;
+
+  //数据多边形
+  repeated GeometryProp dataArea = 10;
+  //状态信息
+  repeated CarTrackProp propDatas = 11;
+  //各路口指标数据
+  repeated CrossStat crossStatList = 12;
+  //各个路口灯态数据
+  repeated CrossLampState lampStatusList = 13;
+
+  //统计图信息
+  CrossGraph crossGraph = 14;
+
+  //服务器时间
+  string serverTime = 15;
+
+  //来源
+  string source = 16;
+
+  //展示层类型：model,point
+  string layerType = 17;
+}
+
+/*
+事件编号
+1	  交通冲突
+2	  急加速
+3	  急减速
+4	  急转弯
+5	  违法超速
+6	  疑似多车事故
+7	  疑似单车事故
+8	  逆向行驶
+9	  违规停车
+10	横穿路段
+11	不按车道行驶
+12	违规变道
+13	异常停车
+14	路口溢出
+15	闯红灯
+16	占用应急车道
+17	路段拥堵
+18	行人闯红灯
+19	非机动车闯红灯
+20	行人入侵机动车道
+21	非机动车入侵机动车道
+22	右转弯未减速
+23	右转弯超出安全车速
+24	大型车右转冲突
+25	大型车右转未停车
+26	大型车入侵危险区
+27	S形危险驾驶
+28	连续变道
+29	路口拥堵
+30	路口死锁
+31	路口失衡
+32	驶离车道
+33	路段溢出
+34	违规掉头
+35	占用公交车道
+101	火灾报警
+111	车辆右转弯超出安全车速预警	雷达检测到右转车道车辆超速（检测线，车辆速度可配置，参考国标）
+112	大型车右转预警	雷视拟合检测到车辆右转后上报预警
+ */
