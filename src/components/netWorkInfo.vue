@@ -7,18 +7,18 @@
                     <div class="date-btn-box">
                         <span class="date-title">分析日期</span>
                         <div class="date-box">
-                            <el-date-picker v-model="analysisTime" type="date" clearable value-format="yyyy-MM-dd" placeholder="选择日期" :picker-options="pickerOptions" @change="dateChange()">
+                            <el-date-picker v-model="analysisTime" type="date" clearable value-format="YYYY-MM-DD" placeholder="选择日期" :disabled-date="disabledDate" @change="dateChange()">
                             </el-date-picker>
                         </div>
                     </div>
-                    <i class="el-icon-close" @click="$parent.isNetWorkInfo = false"></i>
+                    <el-icon class="close-icon" @click="close"><Close /></el-icon>
                 </div>
                 <div class="title-2">
                     <span>路网统计</span>
-                    <img :src="require('../assets/image/screen/network/line.png')" alt="" />
+                    <img :src="networkLine" alt="" />
                 </div>
                 <div class="nav-box" v-if="netWorkStatistics">
-                    <li v-for="item in netWorkStatistics" :class="netWorkNav == item.id ? 'active' : ''" @click="netWorkNav = item.id" :key="item.id">
+                    <li v-for="item in netWorkStatistics" :class="netWorkNav === item.id ? 'active' : ''" @click="netWorkNav = item.id" :key="item.id">
                         <i>
                             <img :src="getImageSrc(item.icon)" alt="" />
                         </i>
@@ -53,8 +53,8 @@
                     <div class="network-data">
                         <div class="export-ect">
                             <h3>历史数据:</h3>
-                            <el-button size="mini" type="primary" @click="exportEct()">
-                                <i class="el-icon-upload2"></i>
+                            <el-button size="small" type="primary" @click="exportEct()">
+                                <el-icon><Upload /></el-icon>
                                 导出
                             </el-button>
                         </div>
@@ -68,293 +68,356 @@
         </div>
     </div>
 </template>
-<script>
+<script setup lang="ts">
+import { getCurrentInstance, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { Close, Upload } from '@element-plus/icons-vue'
+import * as echarts from 'echarts'
 import * as XLSX from 'xlsx/xlsx.mjs'
-import exportFile from '../plugin/xlsxFile'
-export default {
-    data() {
-        return {
-            analysisTime: '',
-            netWorkStatistics: '',
-            netWorkNav: '',
-            netWorkNavEct: null,
-            netWorkEct: null,
-            corssList: [],
-            crossOrder: 1,
-            timesNumDatas: [],
-            timesDatas: [],
-            tableRenderKey: 0,
-            pickerOptions: {
-                disabledDate(time) {
-                    return time.getTime() > Date.now();
-                }
-            },
-        }
-    },
+import http from '@/api/http'
+import EchartsLarge from '@/tool/echartsLarge'
+import exportFile from '@/plugin/xlsxFile'
+import networkLine from '@/assets/image/screen/network/line.png'
 
-    created() {},
-    mounted() {
-        this.getNetWorkStatistics()
-    },
-    destroyed() {},
-    watch: {
-        netWorkNav() {
-            this.getCorssList()
-            this.getIdxChart()
-        },
-    },
-    methods: {
-        dateChange() {
-            this.getNetWorkStatistics()
-            this.getCorssList()
-            this.getIdxChart()
-        },
-        formatDate(date) {
-            const year = date.getFullYear()
-            const month = `${date.getMonth() + 1}`.padStart(2, '0')
-            const day = `${date.getDate()}`.padStart(2, '0')
-            return `${year}-${month}-${day}`
-        },
-        getCompareDates() {
-            const baseDate = this.analysisTime ? new Date(`${this.analysisTime}T00:00:00`) : new Date()
-            const currentDate = new Date(baseDate)
-            const previousDate = new Date(baseDate)
-            previousDate.setDate(previousDate.getDate() - 1)
-            return {
-                currentDate: this.formatDate(currentDate),
-                previousDate: this.formatDate(previousDate),
-            }
-        },
-        getCurrentParams() {
-            if (this.analysisTime) {
-                return {
-                    startTime: this.analysisTime + ' 00:00:00',
-                    endTime: this.analysisTime + ' 23:59:59',
-                }
-            }
-            return {
-                type: 2,
-            }
-        },
-        getCompareParams(dateText) {
-            return {
-                startTime: dateText + ' 00:00:00',
-                endTime: dateText + ' 23:59:59',
-                id: this.netWorkNav,
-            }
-        },
-        normalizeSeriesData(series, times) {
-            const timeValueMap = {}
-            const data = (series && series.data) || []
-            ;(times || []).forEach((time, index) => {
-                timeValueMap[time] = data[index]
-            })
-            return timeValueMap
-        },
-        mergeTimes(primaryTimes, secondaryTimes) {
-            const merged = []
-            ;(primaryTimes || []).concat(secondaryTimes || []).forEach((time) => {
-                if (merged.indexOf(time) === -1) {
-                    merged.push(time)
-                }
-            })
-            return merged
-        },
-        getImageSrc(icon) {
-            try {
-                return require(`../assets/image/screen/network/${icon}.png`);
-            } catch (error) {
-                return require('../assets/image/screen/network/llll.png'); // 默认图片路径
-            }
-        },
-        getNetWorkStatistics() {
-            var param = this.getCurrentParams()
-            this.axios.get(SERVICE_URL_v2 + '/getTotalIndexInfo?', { params: param }).then((data) => {
-                this.netWorkStatistics = data.data.data
-                if (this.netWorkNav) return
-                this.netWorkNav = this.netWorkStatistics[0].id
-            })
-        },
-        getCorssList() {
-            var param = {
-                id: this.netWorkNav,
-                order: this.crossOrder,
-            }
-            if (this.analysisTime) {
-                param = Object.assign({}, this.getCurrentParams(), param)
-            } else {
-                param.type = 2
-            }
-            this.axios.get(SERVICE_URL_v2 + '/getIdxOfCross?', { params: param }).then((data) => {
-                this.corssList = data.data.data
-            })
-        },
-        getIdxChart() {
-            const compareDates = this.getCompareDates()
-            const currentLabel = this.analysisTime ? compareDates.currentDate : '今日'
-            const previousLabel = this.analysisTime ? compareDates.previousDate : '昨日'
-            const currentParams = this.getCompareParams(compareDates.currentDate)
-            const previousParams = this.getCompareParams(compareDates.previousDate)
-
-            Promise.all([
-                this.axios.get(SERVICE_URL_v2 + '/getIdxChart?', { params: currentParams }),
-                this.axios.get(SERVICE_URL_v2 + '/getIdxChart?', { params: previousParams }),
-            ]).then(([currentData, previousData]) => {
-                const currentRes = currentData.data.data || {}
-                const previousRes = previousData.data.data || {}
-                const currentSeries = (currentRes.series && currentRes.series[0]) || { data: [] }
-                const previousSeries = (previousRes.series && previousRes.series[0]) || { data: [] }
-                const times = this.mergeTimes(currentRes.times || [], previousRes.times || [])
-                const currentMap = this.normalizeSeriesData(currentSeries, currentRes.times)
-                const previousMap = this.normalizeSeriesData(previousSeries, previousRes.times)
-                const series = [
-                    {
-                        name: previousLabel,
-                        type: 'line',
-                        smooth: false,
-                        data: times.map((time) => previousMap[time]),
-                        areaStyle: {
-                            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-                                    offset: 0,
-                                    color: 'rgba(25, 188, 241,1)',
-                                },
-                                {
-                                    offset: 1,
-                                    color: 'rgba(25, 188, 241,0.1)',
-                                },
-                            ]),
-                        },
-                    },
-                    {
-                        name: currentLabel,
-                        type: 'line',
-                        smooth: false,
-                        data: times.map((time) => currentMap[time]),
-                        areaStyle: {
-                            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-                                    offset: 0,
-                                    color: 'rgba(55, 237, 246,1)',
-                                },
-                                {
-                                    offset: 1,
-                                    color: 'rgba(55, 237, 246,0.1)',
-                                },
-                            ]),
-                        },
-                    }
-                ]
-                const res = this.netWorkNavEct = {
-                    yaxisName: currentRes.yaxisName || previousRes.yaxisName || '',
-                    times: times,
-                    series: series,
-                }
-
-                this.setEctTable(res)
-                if (this.netWorkEct) {
-                    this.netWorkEct.setOption({
-                        legend: {
-                            data: [previousLabel, currentLabel],
-                        },
-                        xAxis: {
-                            data: times,
-                        },
-                        series: series,
-                    })
-                }
-                var options = {
-                    dom: 'netWorkEct',
-                    color: 'rgba(255,255,255,.75)',
-                    colors: ['#19BCF1', '#37EDF6'],
-                    legendData: {
-                        data: [previousLabel, currentLabel],
-                        textStyle: {
-                            color: '#fff',
-                            fontWeight: 800,
-                            fontSize: 16,
-                            fontFamily: 'Microsoft YaHei',
-                        },
-                        right: 25,
-                        top: 0,
-                    },
-                    xAxisData: times,
-                    yAxisName: '',
-                    gridLeft: 10,
-                    gridBom: 0,
-                    gridTop: this.width > 3800 ? 30 : 15,
-                    gridRight: 0,
-                    yaxisTick: false,
-                    yaxisLine: false,
-                    axisLabelFontSize: this.width > 3800 ? 24 : 12,
-                    ysplitLine: true,
-                    series: series,
-                    boundaryGap: true,
-                    nameTextStyle: {
-                        color: '#fff',
-                        fontSize: 16,
-                    },
-                    nameGap: 25,
-                }
-                this.$nextTick(function() {
-                    this.netWorkEct = this.EchartsLarge.lineChart2(options)
-                })
-            })
-        },
-        tableHeaderStyle({ row, rowIndex }) {
-            if (rowIndex === 0) {
-                return 'background-color: #ccc; color: #000 ;padding:12px 0'
-            }
-        },
-        tableCellStyle({ row, rowIndex }) {
-            if (rowIndex === 0) {
-                return 'background-color: #333; color: #fff ;'
-            }
-        },
-        refreshHistoryTable() {
-            this.tableRenderKey += 1
-            this.$nextTick(() => {
-                if (this.$refs.historyTable && typeof this.$refs.historyTable.doLayout === 'function') {
-                    this.$refs.historyTable.doLayout()
-                }
-            })
-        },
-        setEctTable(res) {
-            if (!this.netWorkNavEct) return
-            var rows = []
-            var columns = []
-            ;(res.series || []).forEach((seriesItem) => {
-                var row = {
-                    label: seriesItem.name,
-                }
-                ;(seriesItem.data || []).forEach((value, index) => {
-                    row['data' + index] = value
-                    if (!columns[index]) {
-                        columns.push({ time: res.times[index], key: 'data' + index })
-                    }
-                })
-                rows.push(row)
-            })
-            this.timesNumDatas = rows
-            this.timesDatas = columns
-            this.refreshHistoryTable()
-        },
-        exportEct() {
-            if (!this.netWorkNavEct) return
-            let ect = this.netWorkNavEct
-            let th = ['时间'].concat((ect.series || []).map((item) => item.name))
-            let row = []
-            for (let i = 0; i < ect.times.length; i++) {
-                let currentRow = [ect.times[i]]
-                ;(ect.series || []).forEach((seriesItem) => {
-                    currentRow.push(seriesItem.data && seriesItem.data[i] !== undefined ? seriesItem.data[i] : null)
-                })
-                row.push(currentRow)
-            }
-            exportFile.xlsxFile(XLSX, ect.yaxisName, {
-                [ect.yaxisName]: [th, ...row],
-            })
-        },
-    },
+interface NetworkStatistic {
+    id: string | number
+    icon: string
+    value: string | number
+    unit: string
+    name: string
 }
+
+interface CrossStatistic {
+    crossId: string | number
+    name: string
+    value: string | number
+}
+
+interface ChartSeries {
+    name: string
+    type?: string
+    smooth?: boolean
+    data: Array<string | number | null | undefined>
+    areaStyle?: unknown
+}
+
+interface ChartResponse {
+    yaxisName?: string
+    times?: string[]
+    series?: ChartSeries[]
+}
+
+interface NetworkChart {
+    yaxisName: string
+    times: string[]
+    series: ChartSeries[]
+}
+
+interface TableRow {
+    label: string
+    [key: string]: string | number | null | undefined
+}
+
+interface TableColumn {
+    time: string
+    key: string
+}
+
+interface TableInstance {
+    doLayout?: () => void
+}
+
+interface ChartInstance {
+    setOption: (option: unknown) => void
+    dispose?: () => void
+}
+
+interface ParentState {
+    isNetWorkInfo: boolean
+}
+
+const instance = getCurrentInstance()
+const parent = instance?.proxy?.$parent as ParentState | undefined
+const imageModules = import.meta.glob(
+    '../assets/image/screen/network/*.png',
+    { eager: true, import: 'default' },
+) as Record<string, string>
+
+const analysisTime = ref('')
+const netWorkStatistics = ref<NetworkStatistic[]>([])
+const netWorkNav = ref<string | number>('')
+const netWorkNavEct = ref<NetworkChart | null>(null)
+const netWorkEct = ref<ChartInstance | null>(null)
+const corssList = ref<CrossStatistic[]>([])
+const crossOrder = ref(1)
+const timesNumDatas = ref<TableRow[]>([])
+const timesDatas = ref<TableColumn[]>([])
+const tableRenderKey = ref(0)
+const historyTable = ref<TableInstance | null>(null)
+const width = window.innerWidth
+
+function close(): void {
+    if (parent) parent.isNetWorkInfo = false
+}
+
+function disabledDate(time: Date): boolean {
+    return time.getTime() > Date.now()
+}
+
+function dateChange(): void {
+    void getNetWorkStatistics()
+    void getCorssList()
+    void getIdxChart()
+}
+
+function formatDate(date: Date): string {
+    const year = date.getFullYear()
+    const month = `${date.getMonth() + 1}`.padStart(2, '0')
+    const day = `${date.getDate()}`.padStart(2, '0')
+    return `${year}-${month}-${day}`
+}
+
+function getCompareDates(): { currentDate: string; previousDate: string } {
+    const baseDate = analysisTime.value
+        ? new Date(`${analysisTime.value}T00:00:00`)
+        : new Date()
+    const previousDate = new Date(baseDate)
+    previousDate.setDate(previousDate.getDate() - 1)
+    return {
+        currentDate: formatDate(baseDate),
+        previousDate: formatDate(previousDate),
+    }
+}
+
+function getCurrentParams(): Record<string, string | number> {
+    return analysisTime.value
+        ? {
+            startTime: `${analysisTime.value} 00:00:00`,
+            endTime: `${analysisTime.value} 23:59:59`,
+        }
+        : { type: 2 }
+}
+
+function getCompareParams(dateText: string): Record<string, string | number> {
+    return {
+        startTime: `${dateText} 00:00:00`,
+        endTime: `${dateText} 23:59:59`,
+        id: netWorkNav.value,
+    }
+}
+
+function normalizeSeriesData(
+    series: ChartSeries | undefined,
+    times: string[] = [],
+): Record<string, string | number | null | undefined> {
+    return times.reduce<Record<string, string | number | null | undefined>>(
+        (result, time, index) => {
+            result[time] = series?.data[index]
+            return result
+        },
+        {},
+    )
+}
+
+function mergeTimes(primary: string[] = [], secondary: string[] = []): string[] {
+    return [...new Set([...primary, ...secondary])]
+}
+
+function getImageSrc(icon: string): string {
+    return imageModules[`../assets/image/screen/network/${icon}.png`]
+        ?? imageModules['../assets/image/screen/network/llll.png']
+        ?? ''
+}
+
+async function getNetWorkStatistics(): Promise<void> {
+    try {
+        const response = await http.get<{ data?: NetworkStatistic[] }>(
+            `${window.APP_CONFIG.SERVICE_URL_v2}/getTotalIndexInfo`,
+            { params: getCurrentParams() },
+        )
+        netWorkStatistics.value = response.data?.data ?? []
+        if (!netWorkNav.value && netWorkStatistics.value.length) {
+            netWorkNav.value = netWorkStatistics.value[0].id
+        }
+    } catch (error) {
+        console.error('Load network statistics failed:', error)
+        netWorkStatistics.value = []
+    }
+}
+
+async function getCorssList(): Promise<void> {
+    if (!netWorkNav.value) return
+    const params: Record<string, string | number> = {
+        ...getCurrentParams(),
+        id: netWorkNav.value,
+        order: crossOrder.value,
+    }
+    try {
+        const response = await http.get<{ data?: CrossStatistic[] }>(
+            `${window.APP_CONFIG.SERVICE_URL_v2}/getIdxOfCross`,
+            { params },
+        )
+        corssList.value = response.data?.data ?? []
+    } catch (error) {
+        console.error('Load crossing statistics failed:', error)
+        corssList.value = []
+    }
+}
+
+async function getIdxChart(): Promise<void> {
+    if (!netWorkNav.value) return
+    const compareDates = getCompareDates()
+    const currentLabel = analysisTime.value ? compareDates.currentDate : '今日'
+    const previousLabel = analysisTime.value ? compareDates.previousDate : '昨日'
+
+    try {
+        const [currentData, previousData] = await Promise.all([
+            http.get<{ data?: ChartResponse }>(
+                `${window.APP_CONFIG.SERVICE_URL_v2}/getIdxChart`,
+                { params: getCompareParams(compareDates.currentDate) },
+            ),
+            http.get<{ data?: ChartResponse }>(
+                `${window.APP_CONFIG.SERVICE_URL_v2}/getIdxChart`,
+                { params: getCompareParams(compareDates.previousDate) },
+            ),
+        ])
+        const currentRes = currentData.data?.data ?? {}
+        const previousRes = previousData.data?.data ?? {}
+        const currentSeries = currentRes.series?.[0]
+        const previousSeries = previousRes.series?.[0]
+        const times = mergeTimes(currentRes.times, previousRes.times)
+        const currentMap = normalizeSeriesData(currentSeries, currentRes.times)
+        const previousMap = normalizeSeriesData(previousSeries, previousRes.times)
+        const series: ChartSeries[] = [
+            {
+                name: previousLabel,
+                type: 'line',
+                smooth: false,
+                data: times.map((time) => previousMap[time]),
+                areaStyle: {
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                        { offset: 0, color: 'rgba(25, 188, 241,1)' },
+                        { offset: 1, color: 'rgba(25, 188, 241,0.1)' },
+                    ]),
+                },
+            },
+            {
+                name: currentLabel,
+                type: 'line',
+                smooth: false,
+                data: times.map((time) => currentMap[time]),
+                areaStyle: {
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                        { offset: 0, color: 'rgba(55, 237, 246,1)' },
+                        { offset: 1, color: 'rgba(55, 237, 246,0.1)' },
+                    ]),
+                },
+            },
+        ]
+        const result: NetworkChart = {
+            yaxisName: currentRes.yaxisName ?? previousRes.yaxisName ?? '',
+            times,
+            series,
+        }
+        netWorkNavEct.value = result
+        setEctTable(result)
+
+        await nextTick()
+        netWorkEct.value?.dispose?.()
+        netWorkEct.value = EchartsLarge.lineChart2({
+            dom: 'netWorkEct',
+            color: 'rgba(255,255,255,.75)',
+            colors: ['#19BCF1', '#37EDF6'],
+            legendData: {
+                data: [previousLabel, currentLabel],
+                textStyle: {
+                    color: '#fff',
+                    fontWeight: 800,
+                    fontSize: 16,
+                    fontFamily: 'Microsoft YaHei',
+                },
+                right: 25,
+                top: 0,
+            },
+            xAxisData: times,
+            yAxisName: '',
+            gridLeft: 10,
+            gridBom: 0,
+            gridTop: width > 3800 ? 30 : 15,
+            gridRight: 0,
+            yaxisTick: false,
+            yaxisLine: false,
+            axisLabelFontSize: width > 3800 ? 24 : 12,
+            ysplitLine: true,
+            series,
+            boundaryGap: true,
+            nameTextStyle: { color: '#fff', fontSize: 16 },
+            nameGap: 25,
+        }) as ChartInstance
+    } catch (error) {
+        console.error('Load network trend failed:', error)
+        netWorkNavEct.value = null
+        timesNumDatas.value = []
+        timesDatas.value = []
+    }
+}
+
+function tableHeaderStyle({ rowIndex }: { rowIndex: number }): string | undefined {
+    if (rowIndex === 0) {
+        return 'background-color: #ccc; color: #000; padding: 12px 0'
+    }
+}
+
+function tableCellStyle({ rowIndex }: { rowIndex: number }): string | undefined {
+    if (rowIndex === 0) return 'background-color: #333; color: #fff'
+}
+
+function refreshHistoryTable(): void {
+    tableRenderKey.value += 1
+    void nextTick(() => historyTable.value?.doLayout?.())
+}
+
+function setEctTable(result: NetworkChart): void {
+    const columns: TableColumn[] = []
+    timesNumDatas.value = result.series.map((seriesItem) => {
+        const row: TableRow = { label: seriesItem.name }
+        seriesItem.data.forEach((value, index) => {
+            row[`data${index}`] = value
+            columns[index] ??= {
+                time: result.times[index],
+                key: `data${index}`,
+            }
+        })
+        return row
+    })
+    timesDatas.value = columns
+    refreshHistoryTable()
+}
+
+function exportEct(): void {
+    const chart = netWorkNavEct.value
+    if (!chart) return
+    const header = ['时间', ...chart.series.map((item) => item.name)]
+    const rows = chart.times.map((time, index) => [
+        time,
+        ...chart.series.map((item) => item.data[index] ?? null),
+    ])
+    exportFile.xlsxFile(XLSX, chart.yaxisName || '路网监测', {
+        [chart.yaxisName || '路网监测']: [header, ...rows],
+    })
+}
+
+watch(netWorkNav, () => {
+    void getCorssList()
+    void getIdxChart()
+})
+
+onMounted(() => {
+    void getNetWorkStatistics()
+})
+
+onBeforeUnmount(() => {
+    netWorkEct.value?.dispose?.()
+})
 </script>
 <style lang="scss" scoped>
 .event-title {
