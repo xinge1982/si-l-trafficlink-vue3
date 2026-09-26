@@ -9,8 +9,13 @@
         </div>
     </div>
 </template>
-<script>
-export default {
+<script lang="ts">
+import { defineComponent } from 'vue';
+
+const { DEVICESERVICE_URL } = window.APP_CONFIG;
+
+
+export default defineComponent({
     props: {
         track: null
     },
@@ -591,7 +596,7 @@ export default {
             }
         }
 }
-};
+});
 </script>
 <style scoped>
 .crossInfo {

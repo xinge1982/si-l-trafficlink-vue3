@@ -57,8 +57,14 @@
 	</div>
 </template>
 
-<script>
-	import timeLine from './timeLine.vue';
+<script lang="ts">
+import { defineComponent } from 'vue';
+import http from '@/api/http';
+
+const { SERVICE_URL } = window.APP_CONFIG;
+
+
+import timeLine from './timeLine.vue';
 
 	function getOrCreateChart(domId) {
 		var dom = document.getElementById(domId);
@@ -68,7 +74,7 @@
 		return echarts.getInstanceByDom(dom) || echarts.init(dom);
 	}
 	
-	export default {
+	export default defineComponent({
 		// props:['timeRange'],
 		components: {
 			timeLine
@@ -108,7 +114,7 @@
 			this.getSignalCharts();
 
 		},
-		destroyed(){
+		unmounted(){
 			this.clearInterval()
 			if (this.realBar) {
 				this.realBar.dispose();
@@ -119,7 +125,7 @@
 				this.realPie = null;
 			}
 		},
-		beforeDestroy(){
+		beforeUnmount(){
 			
 			
 			this.clearInterval()
@@ -220,7 +226,7 @@
 	           
 	          };
 	          this.signalData = '';
-	          this.axios.get( SERVICE_URL+'index/getSignalCharts?', { params: param 
+	          http.get( SERVICE_URL+'index/getSignalCharts?', { params: param
 	            }).then((data) => {
 	            
 	          	this.$nextTick(()=>{
@@ -515,7 +521,7 @@
 	       	}
 		}
     
-	};
+	});
 </script>
 
 <style scoped>

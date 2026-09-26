@@ -78,9 +78,11 @@
                                 <el-button type="primary" size="mini">
                                     {{$t("home.export")}}<i class="el-icon-arrow-down el-icon--right"></i>
                                 </el-button>
-                                <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item :command="item.id" :key="item.id" v-for="item in commandList">{{item.name}}</el-dropdown-item>
-                                </el-dropdown-menu>
+                                <template #dropdown>
+                                    <el-dropdown-menu>
+                                        <el-dropdown-item :command="item.id" :key="item.id" v-for="item in commandList">{{item.name}}</el-dropdown-item>
+                                    </el-dropdown-menu>
+                                </template>
                             </el-dropdown>
                             <div class="evaluate-date-type">
                                 <el-radio-group v-model="dateType">
@@ -162,10 +164,16 @@
         </div>
     </div>
 </template>
-<script>
+<script lang="ts">
+import { defineComponent } from 'vue';
+import http from '@/api/http';
+
+const { SERVICE_URL, WEBSOCKET_URL } = window.APP_CONFIG;
+
+
 import signalState from './signalState.vue';
 import phase from './phase/phase.vue';
-export default {
+export default defineComponent({
     components: {
         signalState,
         phase
@@ -388,7 +396,7 @@ export default {
         this.getInterval()
         this.planType()
     },
-    destroyed() {
+    unmounted() {
         if (this.resizeHandler) {
             window.removeEventListener('resize', this.resizeHandler);
             this.resizeHandler = null;
@@ -412,7 +420,7 @@ export default {
 
             };
 
-            this.axios.get(WEBSOCKET_URL + 'signal/api/planType?', { params: param })
+            http.get(WEBSOCKET_URL + 'signal/api/planType?', { params: param })
                 .then((data) => {
 
                     this.weeks = data.data;
@@ -435,7 +443,7 @@ export default {
                 crossId: this.crossData.crossId
             };
 
-            this.axios.get(WEBSOCKET_URL + 'signal/api/plan?', { params: param })
+            http.get(WEBSOCKET_URL + 'signal/api/plan?', { params: param })
                 .then((data) => {
                     this.planList = data.data;
                     this.planItem = data.data[this.week][0];
@@ -458,7 +466,7 @@ export default {
 
             };
             this.commandList = [];
-            this.axios.get(SERVICE_URL + 'signal/getInterval?', {
+            http.get(SERVICE_URL + 'signal/getInterval?', {
                 params: param
             }).then((data) => {
 
@@ -542,7 +550,7 @@ export default {
 
             };
 
-            this.axios.get(SERVICE_URL + 'signal/getCrossPhaseInfo?', {
+            http.get(SERVICE_URL + 'signal/getCrossPhaseInfo?', {
                 params: param
             }).then((data) => {
 
@@ -560,7 +568,7 @@ export default {
                 startTime: this.dateType == 2 ? this.date.slice(0, 10) + ',' + this.date.slice(11, 21) : this.date
             };
             this.signalData = '';
-            this.axios.get(SERVICE_URL + 'signal/getSightInfo?', {
+            http.get(SERVICE_URL + 'signal/getSightInfo?', {
                 params: param
             }).then((data) => {
 
@@ -579,7 +587,7 @@ export default {
 
             }
 
-            this.axios.get(SERVICE_URL + 'signal/getType?', {
+            http.get(SERVICE_URL + 'signal/getType?', {
                 params: param
             }).then((data) => {
                 this.Index = data.data.data;
@@ -606,7 +614,7 @@ export default {
 
             }
 
-            this.axios.get(SERVICE_URL + 'signal/getRadarInfo?', {
+            http.get(SERVICE_URL + 'signal/getRadarInfo?', {
                 params: param
             }).then((data) => {
                 var radarData = data.data.data.radarData,
@@ -652,7 +660,7 @@ export default {
 
             }
 
-            this.axios.get(SERVICE_URL + 'signal/getPhaseScatter?', {
+            http.get(SERVICE_URL + 'signal/getPhaseScatter?', {
                 params: param
             }).then((data) => {
 
@@ -697,7 +705,7 @@ export default {
 
             }
 
-            this.axios.get(SERVICE_URL + 'signal/getIndexChar?', {
+            http.get(SERVICE_URL + 'signal/getIndexChar?', {
                 params: param
             }).then((data) => {
                 var legendData = []
@@ -820,9 +828,9 @@ export default {
 
             }
 
-            this.axios.get(SERVICE_URL + 'cross/evaluate/getLaneStateInfo?', {
+            http.get(SERVICE_URL + 'cross/evaluate/getLaneStateInfo?', {
                 params: param,
-                cancelToken: new this.axios.CancelToken(function executor(c) {
+                cancelToken: new http.CancelToken(function executor(c) {
                     _this.source = c;
                 })
             }).then((data) => {
@@ -868,7 +876,7 @@ export default {
 
                 })
             }).catch((err) => {
-                if (this.axios.isCancel(err)) {
+                if (http.isCancel(err)) {
                     console.log('Rquest canceled', err.message); //请求如果被取消，这里是返回取消的message
                 } else {
                     //handle error
@@ -932,9 +940,9 @@ export default {
                 time: this.changeTime
             }
 
-            this.axios.get(SERVICE_URL + 'cross/evaluate/getFlowInfo?', {
+            http.get(SERVICE_URL + 'cross/evaluate/getFlowInfo?', {
                 params: param,
-                cancelToken: new this.axios.CancelToken(function executor(c) {
+                cancelToken: new http.CancelToken(function executor(c) {
                     _this.source = c;
                 })
             }).then((data) => {
@@ -960,7 +968,7 @@ export default {
                     this.mapUtils.addmapLine({ maps: this.crossMap, id: item.crossId + '' + i, lines: lines, color: color, strokeWeight: width, opacity: 1, arrow: true })
                 })
             }).catch((err) => {
-                if (this.axios.isCancel(err)) {
+                if (http.isCancel(err)) {
                     console.log('Rquest canceled', err.message); //请求如果被取消，这里是返回取消的message
                 } else {
                     //handle error
@@ -984,9 +992,9 @@ export default {
 
             }
 
-            this.axios.get(SERVICE_URL + 'cross/evaluate/getSpeedInfo?', {
+            http.get(SERVICE_URL + 'cross/evaluate/getSpeedInfo?', {
                 params: param,
-                cancelToken: new this.axios.CancelToken(function executor(c) {
+                cancelToken: new http.CancelToken(function executor(c) {
                     _this.source = c;
                 })
             }).then((data) => {
@@ -1010,7 +1018,7 @@ export default {
                 // this.crossMap.addLayer(layer);
 
             }).catch((err) => {
-                if (this.axios.isCancel(err)) {
+                if (http.isCancel(err)) {
                     console.log('Rquest canceled', err.message); //请求如果被取消，这里是返回取消的message
                 } else {
                     //handle error
@@ -1041,7 +1049,7 @@ export default {
 
     }
 
-};
+});
 </script>
 <style scoped lang="scss">
 .cross-map {

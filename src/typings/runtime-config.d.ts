@@ -57,6 +57,7 @@ declare global {
         SERVICE_URL_v2: string
         SERVICE_URL_screen: string
         WEBSOCKET_URL: string
+        CS_WEBSOCKET_URL?: string
         LOGO_SERVICE: string
         DEVICESERVICE_URL: string
 

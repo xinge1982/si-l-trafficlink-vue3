@@ -24,13 +24,21 @@
         </div>
     </div>
 </template>
-<script>
+<script lang="ts">
+import { defineComponent } from 'vue';
+import http from '@/api/http';
+
+const { SERVICE_URL } = window.APP_CONFIG;
+const CS_WEBSOCKET_URL = window.APP_CONFIG.CS_WEBSOCKET_URL
+    ?? window.APP_CONFIG.WEBSOCKET_URL.replace(/^http/, 'ws');
+
+
 var route = [],
     point = [],
     steps, counter, Intertime;
 var size = 200;
 
-export default {
+export default defineComponent({
 
     props: ["crossData"],
     data() {
@@ -94,7 +102,7 @@ export default {
 
     },
 
-    beforeDestroy() {
+    beforeUnmount() {
 
         clearInterval(this.invt);
         this.invt = null;
@@ -112,7 +120,7 @@ export default {
 
             }
 
-            this.axios.get(SERVICE_URL + 'cameraVideo/getRealDirList?', { params: param }).then((data) => {
+            http.get(SERVICE_URL + 'cameraVideo/getRealDirList?', { params: param }).then((data) => {
 
                 this.dirList = data.data.data;
                 this.dirList.forEach(item => {
@@ -244,7 +252,7 @@ export default {
 
     },
 
-};
+});
 </script>
 <style scoped>
 .crossInfo {

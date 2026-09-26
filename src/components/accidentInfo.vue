@@ -117,12 +117,12 @@
                     </div>
                     <div class="track-tool-bar" style="position: absolute;top: auto;bottom: 140px; transform: translateY(0);right: 12px;">
                         <li :class="dateType==1?'active':''" @click="dateType=1">
-                            <img :src="require('../assets/image/screen/1920/ssgj.png')" alt="">
+                            <img :src="assetUrl('../assets/image/screen/1920/ssgj.png')" alt="">
                             <span>事故轨迹</span>
                             <div class="track-date-box">{{date}}</div>
                         </li>
                         <li :class="dateType==2?'active':''" @click="dateType=2">
-                            <img :src="require('../assets/image/screen/1920/lsgj.png')" alt="">
+                            <img :src="assetUrl('../assets/image/screen/1920/lsgj.png')" alt="">
                             <span>{{$t("home.historicalTrack")}}</span>
                             <div class="tool-bar-date" v-show="dateType==2">
                                 <div style="display: flex;">
@@ -142,7 +142,7 @@
                             </div>
                         </li>
                         <li @click="wsplay=!wsplay" :class="wsplay?'':'active'">
-                            <img :src="require('../assets/image/screen/1920/tzgj.png')" alt="">
+                            <img :src="assetUrl('../assets/image/screen/1920/tzgj.png')" alt="">
                             <span>停止轨迹</span>
                         </li>
                     </div>
@@ -151,7 +151,15 @@
         </div>
     </div>
 </template>
-<script>
+<script lang="ts">
+import { defineComponent } from 'vue';
+import http from '@/api/http';
+
+const { SERVICE_URL, WEBSOCKET_URL } = window.APP_CONFIG;
+
+const assetModules = import.meta.glob('../assets/image/**/*', { eager: true, import: 'default' }) as Record<string, string>;
+const assetUrl = (path: string): string => assetModules[path] ?? '';
+
 import FlvJs from './video/FlvJs.vue'
 import trackPlayback from './trackPlayback.vue';
 import protobuf from "protobufjs";
@@ -166,7 +174,7 @@ protobuf.load("static/carTrackObj.proto", function(err, root) {
 
 });
 
-export default {
+export default defineComponent({
     props: ['accidentData', 'type'],
     components: {
         FlvJs,
@@ -394,10 +402,10 @@ export default {
 
 
     },
-    destroyed() {
+    unmounted() {
 
     },
-    beforeDestroy() {
+    beforeUnmount() {
         this.isDestroying = true;
         this.routerFlag = true;
         this.clearInterval()
@@ -488,7 +496,7 @@ export default {
 
             }
 
-            this.axios.get(SERVICE_URL + 'handle/getTrafficEventInfoById?', { params: param }).then((data) => {
+            http.get(SERVICE_URL + 'handle/getTrafficEventInfoById?', { params: param }).then((data) => {
                 var item = this.accidentInfo = data.data.data;
                 var obj = {
                     item: '',
@@ -608,7 +616,7 @@ export default {
 
             }
 
-            this.axios.get(SERVICE_URL + 'cameraVideo/getRealDirList?', { params: param }).then((data) => {
+            http.get(SERVICE_URL + 'cameraVideo/getRealDirList?', { params: param }).then((data) => {
 
                 this.dirList = data.data.data;
                 this.dirList.forEach(item => {
@@ -629,7 +637,7 @@ export default {
 
             }
 
-            this.axios.get(SERVICE_URL + 'cameraVideo/getHostDirList?', { params: param }).then((data) => {
+            http.get(SERVICE_URL + 'cameraVideo/getHostDirList?', { params: param }).then((data) => {
                 this.updateTime = true;
                 this.options1 = data.data.data;
                 // this.expandedKeys1 = data.data.data[0].id;
@@ -662,7 +670,7 @@ export default {
 
             }
 
-            this.axios.get(SERVICE_URL + 'cameraVideo/getDurationTime?', { params: param }).then((data) => {
+            http.get(SERVICE_URL + 'cameraVideo/getDurationTime?', { params: param }).then((data) => {
 
                 this.durationTime = data.data.data.durationTime;
                 this.influenceDegree = data.data.data.influenceDegree;
@@ -680,7 +688,7 @@ export default {
 
             }
 
-            this.axios.get(SERVICE_URL + 'cameraVideo/eventHandle?', { params: param }).then((data) => {
+            http.get(SERVICE_URL + 'cameraVideo/eventHandle?', { params: param }).then((data) => {
 
 
 
@@ -705,7 +713,7 @@ export default {
 
             }
 
-            this.axios.get(SERVICE_URL + 'VCN/playVideo?', { params: param }).then((data) => {
+            http.get(SERVICE_URL + 'VCN/playVideo?', { params: param }).then((data) => {
                 if (data.data.code == -1) {
                     this.$message({
                         showClose: true,
@@ -762,7 +770,7 @@ export default {
 
             };
 
-            this.axios.post(WEBSOCKET_URL + 'consul/api/request?', param).then((data) => {
+            http.post(WEBSOCKET_URL + 'consul/api/request?', param).then((data) => {
 
                 if (data.data.statusCode == 200) {
                     this.URL = data.data.path ? WEBSOCKET_URL + data.data.path : data.data.url;
@@ -784,7 +792,7 @@ export default {
                 bound: bounds._sw.lng + ',' + bounds._sw.lat + ';' + bounds._ne.lng + ',' + bounds._ne.lat
             };
 
-            this.axios.get(this.URL + 'region/api/getStopline?', {
+            http.get(this.URL + 'region/api/getStopline?', {
                 params: param
             }).then((data) => {
                 this.trackoptions.geojson = data.data;
@@ -864,7 +872,7 @@ export default {
 
             };
 
-            this.axios.post(this.URL + 'cross/api/histrack/resettime?', param).then((data) => {
+            http.post(this.URL + 'cross/api/histrack/resettime?', param).then((data) => {
 
 
             })
@@ -879,7 +887,7 @@ export default {
 
             };
 
-            this.axios.post(this.URL + 'cross/api/histrack/stop?', param).then((data) => {
+            http.post(this.URL + 'cross/api/histrack/stop?', param).then((data) => {
 
 
             })
@@ -910,7 +918,7 @@ export default {
             };
 
 
-            this.axios.post(this.URL + 'cross/api/histrack/search?', param).then((data) => {
+            http.post(this.URL + 'cross/api/histrack/search?', param).then((data) => {
 
                 let map1 = this.$refs.playBack.roadMap;
                 if (data.data.statusCode == 404 && map1.getSource('geojson-point')) {
@@ -942,7 +950,7 @@ export default {
             };
 
 
-            this.axios.post(this.URL + 'cross/api/histrack/search?', param).then((data) => {
+            http.post(this.URL + 'cross/api/histrack/search?', param).then((data) => {
 
 
                 if (data.data.statusCode == 404) {
@@ -985,7 +993,7 @@ export default {
 
     }
 
-};
+});
 </script>
 <style lang="scss">
 .a-box-title {

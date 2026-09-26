@@ -10,7 +10,7 @@
                 <div class="event-left-box">
                     <div class="title-2" style="margin:20px 0;">
                         <span class="index-title">事件信息</span>
-                        <img :src="require('../assets/image/screen/1920/title-2.png')" alt="" style="width: 304px;">
+                        <img :src="assetUrl('../assets/image/screen/1920/title-2.png')" alt="" style="width: 304px;">
                     </div>
                     <ul class="event-info-list" v-if="eventInfo" style="height: 350px;">
                         <div class="th">
@@ -137,12 +137,12 @@
                     </div>
                     <div class="track-tool-bar" style="position: absolute;top: auto;bottom: 29px; transform: translateY(0);left: 29px;">
                         <li :class="dateType==1?'active':''" @click="dateType=1">
-                            <img :src="require('../assets/image/screen/1920/ssgj.png')" alt="">
+                            <img :src="assetUrl('../assets/image/screen/1920/ssgj.png')" alt="">
                             <span>事件轨迹</span>
                             <div class="track-date-box">{{date}}</div>
                         </li>
                         <li :class="dateType==2?'active':''" @click="dateType=2">
-                            <img :src="require('../assets/image/screen/1920/lsgj.png')" alt="">
+                            <img :src="assetUrl('../assets/image/screen/1920/lsgj.png')" alt="">
                             <span>{{$t("home.historicalTrack")}}</span>
                             <div class="tool-bar-date" v-show="dateType==2">
                                 <div style="display: flex;">
@@ -162,7 +162,7 @@
                             </div>
                         </li>
                         <li @click="wsplay=!wsplay" :class="wsplay?'':'active'">
-                            <img :src="require('../assets/image/screen/1920/tzgj.png')" alt="">
+                            <img :src="assetUrl('../assets/image/screen/1920/tzgj.png')" alt="">
                             <span>停止轨迹</span>
                         </li>
                     </div>
@@ -188,7 +188,15 @@
         </div>
     </div>
 </template>
-<script>
+<script lang="ts">
+import { defineComponent } from 'vue';
+import http from '@/api/http';
+
+const { SERVICE_URL, DEVICESERVICE_URL, WEBSOCKET_URL } = window.APP_CONFIG;
+
+const assetModules = import.meta.glob('../assets/image/**/*', { eager: true, import: 'default' }) as Record<string, string>;
+const assetUrl = (path: string): string => assetModules[path] ?? '';
+
 import FlvJs from './video/FlvJs.vue'
 import trackPlayback from './trackPlayback.vue';
 import protobuf from "protobufjs";
@@ -203,7 +211,7 @@ protobuf.load("static/carTrackObj.proto", function(err, root) {
 
 });
 
-export default {
+export default defineComponent({
     props: ['eventData', 'type', 'returnHome'],
     components: {
         FlvJs,
@@ -424,11 +432,11 @@ export default {
 
 
     },
-    destroyed() {
+    unmounted() {
 
 
     },
-    beforeDestroy() {
+    beforeUnmount() {
         this.isDestroying = true;
         this.popupUrl = null;
         this.clearInterval();
@@ -477,7 +485,7 @@ export default {
             }
 
             var datas = JSON.stringify(param)
-            this.axios.post(DEVICESERVICE_URL + 'api/capture/show', datas).then((data) => {
+            http.post(DEVICESERVICE_URL + 'api/capture/show', datas).then((data) => {
                 this.popupUrl = DEVICESERVICE_URL + data.data.data.popupUrl;
 
             })
@@ -532,7 +540,7 @@ export default {
 
             }
             // this.legend = true;
-            this.axios.get(SERVICE_URL + 'cityEvent/getCarLine?', { params: param }).then((data) => {
+            http.get(SERVICE_URL + 'cityEvent/getCarLine?', { params: param }).then((data) => {
                 const res = data.data.data;
                 if (data.data.code == -1) {
                     this.legend = false;
@@ -586,7 +594,7 @@ export default {
                 type:code
             }
 
-            this.axios.get(SERVICE_URL + 'handle/handleEventById?', { params: param }).then((data) => {
+            http.get(SERVICE_URL + 'handle/handleEventById?', { params: param }).then((data) => {
                 if (data.data.code == 1) {
                     this.$message({
                         message: data.data.data,
@@ -713,7 +721,7 @@ export default {
 
             }
 
-            this.axios.get(SERVICE_URL + 'cameraVideo/getCameraState?', { params: param }).then((data) => {
+            http.get(SERVICE_URL + 'cameraVideo/getCameraState?', { params: param }).then((data) => {
                 this.cameraState = data.data.data.state;
                 this.cameraDesc = data.data.data.desc;
                 if (this.cameraState == 1) {
@@ -731,7 +739,7 @@ export default {
 
             }
 
-            this.axios.get(SERVICE_URL + 'cameraVideo/getVideoState?', { params: param }).then((data) => {
+            http.get(SERVICE_URL + 'cameraVideo/getVideoState?', { params: param }).then((data) => {
                 this.videoState = data.data.data.state;
                 if (this.videoState == 1) {
                     this.clearInterval()
@@ -745,7 +753,7 @@ export default {
                 id: this.eventData.id
             }
 
-            this.axios.get(SERVICE_URL + 'cameraVideo/generateVideo?', { params: param }).then((data) => {
+            http.get(SERVICE_URL + 'cameraVideo/generateVideo?', { params: param }).then((data) => {
                 this.getVideoState()
             })
         },
@@ -779,7 +787,7 @@ export default {
 
             }
 
-            this.axios.get(SERVICE_URL + 'cameraVideo/getMp4Exist?', { params: param }).then((data) => {
+            http.get(SERVICE_URL + 'cameraVideo/getMp4Exist?', { params: param }).then((data) => {
                 this.mp4Show = data.data.code == -1 ? false : true;
                 this.radio1 == data.data.code == -1 ? 2 : 1;
             })
@@ -797,7 +805,7 @@ export default {
 
             }
 
-            this.axios.get(SERVICE_URL + 'cameraVideo/getHostDirList?', { params: param }).then((data) => {
+            http.get(SERVICE_URL + 'cameraVideo/getHostDirList?', { params: param }).then((data) => {
 
                 this.dirList = data.data.data;
 
@@ -825,7 +833,7 @@ export default {
                 // centerY: this.eventData.centerY,
                 // typeCode: this.eventData.typeCode
             };
-            this.axios.get(SERVICE_URL + 'cameraVideo/getHostDirList?', { params: param }).then((data) => {
+            http.get(SERVICE_URL + 'cameraVideo/getHostDirList?', { params: param }).then((data) => {
 
                 this.options1 = data.data.data;
 
@@ -866,7 +874,7 @@ export default {
 
             }
 
-            this.axios.get(SERVICE_URL + 'cameraVideo/getDurationTime?', { params: param }).then((data) => {
+            http.get(SERVICE_URL + 'cameraVideo/getDurationTime?', { params: param }).then((data) => {
 
                 this.durationTime = data.data.data.durationTime;
                 this.influenceDegree = data.data.data.influenceDegree;
@@ -883,7 +891,7 @@ export default {
 
             }
 
-            this.axios.get(SERVICE_URL + 'handle/getEventInfoById?', { params: param }).then((data) => {
+            http.get(SERVICE_URL + 'handle/getEventInfoById?', { params: param }).then((data) => {
 
                 this.eventInfo = data.data.data;
                 if (this.eventInfo.desc.indexOf("大") >= 0) {
@@ -900,7 +908,7 @@ export default {
                 id: this.eventData.id
             }
 
-            this.axios.get(SERVICE_URL + 'handle/getEventInfoById?', { params: param }).then((data) => {
+            http.get(SERVICE_URL + 'handle/getEventInfoById?', { params: param }).then((data) => {
                 this.eventInfo = data.data.data;
             })
         },
@@ -914,7 +922,7 @@ export default {
 
             }
 
-            this.axios.get(SERVICE_URL + 'handle/getEventHandleInfo?', { params: param }).then((data) => {
+            http.get(SERVICE_URL + 'handle/getEventHandleInfo?', { params: param }).then((data) => {
 
 
                 this.handleInfo = data.data.data;
@@ -929,7 +937,7 @@ export default {
 
             }
 
-            this.axios.get(SERVICE_URL + 'handle/getEventHandleType?', { params: param }).then((data) => {
+            http.get(SERVICE_URL + 'handle/getEventHandleType?', { params: param }).then((data) => {
 
                 this.handleType = data.data.data;
                 this.getEventHandleInfo()
@@ -961,7 +969,7 @@ export default {
 
             }
 
-            this.axios.get(SERVICE_URL + 'VCN/playVideo?', { params: param }).then((data) => {
+            http.get(SERVICE_URL + 'VCN/playVideo?', { params: param }).then((data) => {
                 this.videoRid = this.address[1].split(',')[0];
                 this.videoId = this.address[1].split(',')[1];
 
@@ -1082,7 +1090,7 @@ export default {
 
             };
 
-            this.axios.post(WEBSOCKET_URL + 'consul/api/request?', param).then((data) => {
+            http.post(WEBSOCKET_URL + 'consul/api/request?', param).then((data) => {
 
                 if (data.data.statusCode == 200) {
                     this.URL = data.data.path ? WEBSOCKET_URL + data.data.path : data.data.url;
@@ -1107,7 +1115,7 @@ export default {
 
             };
 
-            this.axios.get(this.URL + 'region/api/getStopline?', {
+            http.get(this.URL + 'region/api/getStopline?', {
                 params: param
             }).then((data) => {
                 this.trackoptions.geojson = data.data;
@@ -1190,7 +1198,7 @@ export default {
 
             };
 
-            this.axios.post(this.URL + 'cross/api/histrack/resettime?', param).then((data) => {
+            http.post(this.URL + 'cross/api/histrack/resettime?', param).then((data) => {
 
 
             })
@@ -1200,7 +1208,7 @@ export default {
 
     }
 
-};
+});
 </script>
 <style lang="scss">
 .event-box-title {

@@ -34,10 +34,10 @@
                         <div class="cross-level">
                             <div style="overflow: hidden;">
                                 <li class="bg-none" style="float: left;">
-                                    <img :src="require('../assets/image/screen/c/jx.png')" alt="">
+                                    <img :src="assetUrl('../assets/image/screen/c/jx.png')" alt="">
                                     <span>{{CrossStatistics.roadLevel.name}}</span>
                                     <b>{{CrossStatistics.roadLevel.level}}</b>
-                                    <img :src="CrossStatistics.roadLevel.upDown<0?require('../assets/image/screen/c/down.png'):CrossStatistics.roadLevel.upDown>0?require('../assets/image/screen/c/up.png'):''" alt="" v-show="CrossStatistics.roadLevel.upDown!==0">
+                                    <img :src="CrossStatistics.roadLevel.upDown<0?assetUrl('../assets/image/screen/c/down.png'):CrossStatistics.roadLevel.upDown>0?assetUrl('../assets/image/screen/c/up.png'):''" alt="" v-show="CrossStatistics.roadLevel.upDown!==0">
                                 </li>
                                 <li class="bg-none" style="float: right;display: flex;">
                                     <span>{{CrossStatistics.flow.name}}</span>
@@ -54,7 +54,7 @@
                             <b>{{item.level}}</b>
                             <p>
                                 <span>{{item.ratio}}</span>
-                                <img :src="item.upDown<0?require('../assets/image/screen/c/down.png'):item.upDown>0?require('../assets/image/screen/c/up.png'):''" alt="">
+                                <img :src="item.upDown<0?assetUrl('../assets/image/screen/c/down.png'):item.upDown>0?assetUrl('../assets/image/screen/c/up.png'):''" alt="">
                             </p>
                         </div>
                         <el-table :data="dirList.data" style="width: 476px;margin-top: 30px;background: none;" :height="260" :header-row-class-name="'list-header'" :row-class-name="'dir-row'" :row-key='getRowKeys' @row-click="rowClick">
@@ -68,7 +68,7 @@
                     <div class="flex">
                         <div style="flex:1.5;">
                             <p class="cross-evaluate-right-title">
-                                <img :src="require('../assets/image/screen/c/jx.png')" alt="">
+                                <img :src="assetUrl('../assets/image/screen/c/jx.png')" alt="">
                                 <span style="margin-right: 5px;">{{levelName}}</span>
                                 <span style="margin-left: 0;margin-right: 5px;" v-if="crossData">{{crossData.crossName||crossData.roadName
                                     }}</span>
@@ -105,8 +105,16 @@
         </div>
     </div>
 </template>
-<script>
-export default {
+<script lang="ts">
+import { defineComponent } from 'vue';
+import http from '@/api/http';
+
+const { SERVICE_URL } = window.APP_CONFIG;
+
+const assetModules = import.meta.glob('../assets/image/**/*', { eager: true, import: 'default' }) as Record<string, string>;
+const assetUrl = (path: string): string => assetModules[path] ?? '';
+
+export default defineComponent({
 
     data() {
         return {
@@ -124,17 +132,17 @@ export default {
                 name: "交通安全",
                 value: 'A',
                 value1: '0.04%',
-                icon: require('../assets/image/screen/c/up.png')
+                icon: assetUrl('../assets/image/screen/c/up.png')
             }, {
                 name: "交通效率",
                 value: 'C',
                 value1: '12.98%',
-                icon: require('../assets/image/screen/c/up.png')
+                icon: assetUrl('../assets/image/screen/c/up.png')
             }, {
                 name: "平顺性",
                 value: 'C',
                 value1: '19.77%',
-                icon: require('../assets/image/screen/c/down.png')
+                icon: assetUrl('../assets/image/screen/c/down.png')
             }],
             CrossStatistics: '',
             urls: [],
@@ -176,7 +184,7 @@ export default {
         
 
     },
-    destroyed() {
+    unmounted() {
         if (this.dirMap) {
             this.dirMap.remove()
         }
@@ -248,7 +256,7 @@ export default {
 
             };
 
-            this.axios.get(SERVICE_URL + 'road/evaluate/v2/getRoadStatistics?', { params: param }).then((data) => {
+            http.get(SERVICE_URL + 'road/evaluate/v2/getRoadStatistics?', { params: param }).then((data) => {
 
                 var res = this.CrossStatistics = data.data.data;
 
@@ -277,7 +285,7 @@ export default {
 
             };
 
-            this.axios.get(SERVICE_URL + 'road/evaluate/v2/getStatisticsType?', { params: param }).then((data) => {
+            http.get(SERVICE_URL + 'road/evaluate/v2/getStatisticsType?', { params: param }).then((data) => {
 
                 var res = this.types = data.data.data;
                 this.type = res[0].value;
@@ -314,7 +322,7 @@ export default {
 
             };
 
-            this.axios.get(SERVICE_URL + 'road/evaluate/v2/getEvaluateDetail?', { params: param }).then((data) => {
+            http.get(SERVICE_URL + 'road/evaluate/v2/getEvaluateDetail?', { params: param }).then((data) => {
                 // this.loading.close()
                 var res = this.ectData = data.data.data;
 
@@ -548,7 +556,7 @@ export default {
 
             }
 
-            this.axios.get(SERVICE_URL + 'road/evaluate/v2/getRoadTurnState?', {
+            http.get(SERVICE_URL + 'road/evaluate/v2/getRoadTurnState?', {
                 params: param
 
             }).then((data) => {
@@ -599,7 +607,7 @@ export default {
                 this.mapUtils.setBestMap(allLines, { maps: this.dirMap, maxZoom: 20, pitch: 45 })
 
             }).catch((err) => {
-                if (this.axios.isCancel(err)) {
+                if (http.isCancel(err)) {
                     console.log('Rquest canceled', err.message); //请求如果被取消，这里是返回取消的message
                 } else {
                     //handle error
@@ -635,7 +643,7 @@ export default {
 
             };
 
-            this.axios.get(SERVICE_URL + 'cross/evaluate/v2/getTrafficHot?', { params: param }).then((data) => {
+            http.get(SERVICE_URL + 'cross/evaluate/v2/getTrafficHot?', { params: param }).then((data) => {
                 this.dirMap.removeLayerAndSource('heatmapLayer')
                 var features = []
                 data.data.data.forEach(item => {
@@ -684,7 +692,7 @@ export default {
         },
     }
 
-};
+});
 </script>
 <style lang="scss">
 .component-box {

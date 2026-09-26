@@ -1,10 +1,18 @@
 <template>
     <div class="track-play-map-box" id="homeMap"></div>
 </template>
-<script>
+<script lang="ts">
+import { defineComponent } from 'vue';
+import http from '@/api/http';
+
+const { WEBSOCKET_URL } = window.APP_CONFIG;
+
+const assetModules = import.meta.glob('../assets/image/**/*', { eager: true, import: 'default' }) as Record<string, string>;
+const assetUrl = (path: string): string => assetModules[path] ?? '';
+
 var popup = null;
 
-export default {
+export default defineComponent({
 
     props: {
         options: {
@@ -53,43 +61,43 @@ export default {
             popup: null,
             homeMap: null,
             trackCode: '',
-            icon3: require('../assets/image/screen/12k/video.png'),
-            icon9: require('../assets/image/screen/center/9.png'),
-            huo: require('../assets/image/huo.png'),
-            evt: require('../assets/image/possibleJam.png'),
-            camera1: require('../assets/image/screen/1920/camera1.png'),
-            camera2: require('../assets/image/screen/1920/camera2.png'),
-            camera3: require('../assets/image/screen/1920/camera3.png'),
-            camera4: require('../assets/image/screen/1920/camera4.png'),
-            camera5: require('../assets/image/screen/1920/camera5.png'),
-            camera6: require('../assets/image/screen/1920/camera6.png'),
-            camera7: require('../assets/image/screen/1920/camera-3-0.png'),
-            camera8: require('../assets/image/screen/1920/camera-4-0.png'),
-            camera9: require('../assets/image/screen/1920/camera-5-0.png'),
-            camera10:require('../assets/image/screen/1920/camera-6-0.png'),
-            camera11: require('../assets/image/screen/1920/camera-1-0.png'),
-            camera12:require('../assets/image/screen/1920/camera-2-0.png'),
+            icon3: assetUrl('../assets/image/screen/12k/video.png'),
+            icon9: assetUrl('../assets/image/screen/center/9.png'),
+            huo: assetUrl('../assets/image/huo.png'),
+            evt: assetUrl('../assets/image/possibleJam.png'),
+            camera1: assetUrl('../assets/image/screen/1920/camera1.png'),
+            camera2: assetUrl('../assets/image/screen/1920/camera2.png'),
+            camera3: assetUrl('../assets/image/screen/1920/camera3.png'),
+            camera4: assetUrl('../assets/image/screen/1920/camera4.png'),
+            camera5: assetUrl('../assets/image/screen/1920/camera5.png'),
+            camera6: assetUrl('../assets/image/screen/1920/camera6.png'),
+            camera7: assetUrl('../assets/image/screen/1920/camera-3-0.png'),
+            camera8: assetUrl('../assets/image/screen/1920/camera-4-0.png'),
+            camera9: assetUrl('../assets/image/screen/1920/camera-5-0.png'),
+            camera10:assetUrl('../assets/image/screen/1920/camera-6-0.png'),
+            camera11: assetUrl('../assets/image/screen/1920/camera-1-0.png'),
+            camera12:assetUrl('../assets/image/screen/1920/camera-2-0.png'),
             weatherImgs: {
-                0: require('../assets/image/screen/weather/0.png'),
-                1: require('../assets/image/screen/weather/1.png'),
-                2: require('../assets/image/screen/weather/2.png'),
-                3: require('../assets/image/screen/weather/3.png'),
-                4: require('../assets/image/screen/weather/4.png'),
-                5: require('../assets/image/screen/weather/5.png'),
-                6: require('../assets/image/screen/weather/6.png'),
-                7: require('../assets/image/screen/weather/7.png'),
-                8: require('../assets/image/screen/weather/8.png'),
-                9: require('../assets/image/screen/weather/9.png'),
-                11: require('../assets/image/screen/weather/11.png'),
-                14: require('../assets/image/screen/weather/14.png'),
-                15: require('../assets/image/screen/weather/15.png'),
-                16: require('../assets/image/screen/weather/16.png'),
-                17: require('../assets/image/screen/weather/17.png'),
-                18: require('../assets/image/screen/weather/18.png'),
-                20: require('../assets/image/screen/weather/20.png'),
-                29: require('../assets/image/screen/weather/29.png'),
-                30: require('../assets/image/screen/weather/30.png'),
-                53: require('../assets/image/screen/weather/53.png')
+                0: assetUrl('../assets/image/screen/weather/0.png'),
+                1: assetUrl('../assets/image/screen/weather/1.png'),
+                2: assetUrl('../assets/image/screen/weather/2.png'),
+                3: assetUrl('../assets/image/screen/weather/3.png'),
+                4: assetUrl('../assets/image/screen/weather/4.png'),
+                5: assetUrl('../assets/image/screen/weather/5.png'),
+                6: assetUrl('../assets/image/screen/weather/6.png'),
+                7: assetUrl('../assets/image/screen/weather/7.png'),
+                8: assetUrl('../assets/image/screen/weather/8.png'),
+                9: assetUrl('../assets/image/screen/weather/9.png'),
+                11: assetUrl('../assets/image/screen/weather/11.png'),
+                14: assetUrl('../assets/image/screen/weather/14.png'),
+                15: assetUrl('../assets/image/screen/weather/15.png'),
+                16: assetUrl('../assets/image/screen/weather/16.png'),
+                17: assetUrl('../assets/image/screen/weather/17.png'),
+                18: assetUrl('../assets/image/screen/weather/18.png'),
+                20: assetUrl('../assets/image/screen/weather/20.png'),
+                29: assetUrl('../assets/image/screen/weather/29.png'),
+                30: assetUrl('../assets/image/screen/weather/30.png'),
+                53: assetUrl('../assets/image/screen/weather/53.png')
             },
             crossing: null
 
@@ -144,7 +152,7 @@ export default {
             return this.crossData.crossId
         }
     },
-    beforeDestroy() {
+    beforeUnmount() {
 
         this.homeMap.remove()
     },
@@ -156,7 +164,7 @@ export default {
 
             };
 
-            this.axios.get(WEBSOCKET_URL + 'cross/api/getTrackCode?', { params: param }).then((data) => {
+            http.get(WEBSOCKET_URL + 'cross/api/getTrackCode?', { params: param }).then((data) => {
                 this.trackCode = data.data;
             })
         },
@@ -767,7 +775,7 @@ export default {
 
     }
 
-};
+});
 </script>
 <style>
 .track-play-map-box {

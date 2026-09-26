@@ -76,7 +76,7 @@
                             <div class="track-date-box">{{date}}</div>
                         </li>
                         <li @click="wsplay=!wsplay" :class="wsplay?'':'active'">
-                            <img :src="require('../assets/image/screen/1920/tzgj.png')" alt="">
+                            <img :src="assetUrl('../assets/image/screen/1920/tzgj.png')" alt="">
                             <span>{{wsplay?'停止轨迹':'播放轨迹'}}</span>
                         </li>
                     </div>
@@ -91,7 +91,15 @@
         </div>
     </div>
 </template>
-<script>
+<script lang="ts">
+import { defineComponent } from 'vue';
+import http from '@/api/http';
+
+const { SERVICE_URL, SERVICE_URL_v2, DEVICESERVICE_URL, WEBSOCKET_URL } = window.APP_CONFIG;
+
+const assetModules = import.meta.glob('../assets/image/**/*', { eager: true, import: 'default' }) as Record<string, string>;
+const assetUrl = (path: string): string => assetModules[path] ?? '';
+
 import protobuf from "protobufjs";
 var AwesomeMessage;
 protobuf.load("static/carTrackObj.proto", function(err, root) {
@@ -105,7 +113,7 @@ protobuf.load("static/carTrackObj.proto", function(err, root) {
 });
 import trackPlayback from './trackPlayback.vue';
 import FlvJs from './video/FlvJs.vue'
-export default {
+export default defineComponent({
 
     components: { trackPlayback, FlvJs },
     data() {
@@ -206,10 +214,10 @@ export default {
         this.endTime = this.datetype.split(',')[1]
         this.getLocationList()
     },
-    destroyed() {
+    unmounted() {
         this.popupUrl = null;
     },
-    beforeDestroy() {
+    beforeUnmount() {
         this.isDestroying = true;
         this.popupUrl = null;
         if (this.socketInitTimer) {
@@ -263,7 +271,7 @@ export default {
             }
 
             var datas = JSON.stringify(param)
-            this.axios.post(DEVICESERVICE_URL + 'api/capture/show', datas).then((data) => {
+            http.post(DEVICESERVICE_URL + 'api/capture/show', datas).then((data) => {
 
                 this.popupUrl =  DEVICESERVICE_URL+data.data.data.popupUrl;
 
@@ -276,7 +284,7 @@ export default {
 
             };
 
-            this.axios.get(SERVICE_URL + 'travel/getLocationList?', { params: param }).then((data) => {
+            http.get(SERVICE_URL + 'travel/getLocationList?', { params: param }).then((data) => {
 
                 this.locationList = data.data.data;
                 this.location = data.data.data[0].value
@@ -301,7 +309,7 @@ export default {
                 pageSize: this.pageSize
             };
 
-            this.axios.get(SERVICE_URL + 'travel/getTravelList?', { params: param }).then((data) => {
+            http.get(SERVICE_URL + 'travel/getTravelList?', { params: param }).then((data) => {
                 this.travelList = data.data.data.resultList;
                 this.total = data.data.data.totalNum;
                 this.loading = false;
@@ -339,7 +347,7 @@ export default {
 
             }
 
-            this.axios.get(SERVICE_URL + 'cameraVideo/getRealDirList?', { params: param }).then((data) => {
+            http.get(SERVICE_URL + 'cameraVideo/getRealDirList?', { params: param }).then((data) => {
 
                 this.dirList = data.data.data;
 
@@ -385,7 +393,7 @@ export default {
 
             }
 
-            this.axios.get(SERVICE_URL + 'VCN/playVideo?', { params: param }).then((data) => {
+            http.get(SERVICE_URL + 'VCN/playVideo?', { params: param }).then((data) => {
                 this.videoRid = this.address[1].split(',')[0];
                 this.videoId = this.address[1].split(',')[1];
 
@@ -430,7 +438,7 @@ export default {
 
             };
 
-            this.axios.post(WEBSOCKET_URL + 'consul/api/request?', param).then((data) => {
+            http.post(WEBSOCKET_URL + 'consul/api/request?', param).then((data) => {
 
                 if (data.data.statusCode == 200) {
                     this.URL = data.data.path ? WEBSOCKET_URL + data.data.path : data.data.url;
@@ -455,7 +463,7 @@ export default {
 
             };
 
-            this.axios.get(this.URL + 'region/api/getStopline?', {
+            http.get(this.URL + 'region/api/getStopline?', {
                 params: param
             }).then((data) => {
                 this.trackoptions.geojson = data.data;
@@ -609,7 +617,7 @@ export default {
 
             }, keys)
 
-            this.axios.get(SERVICE_URL_v2 + '/event/getStatisticsList?', { params: param }).then((data) => {
+            http.get(SERVICE_URL_v2 + '/event/getStatisticsList?', { params: param }).then((data) => {
                 this.eventTitle = data.data.data.title;
                 this.eventList = data.data.data.data;
             })
@@ -628,7 +636,7 @@ export default {
 
             }, keys)
 
-            this.axios.get(SERVICE_URL_v2 + '/event/getTendencyChart?', { params: param }).then((data) => {
+            http.get(SERVICE_URL_v2 + '/event/getTendencyChart?', { params: param }).then((data) => {
                 var res = data.data.data;
 
 
@@ -686,7 +694,7 @@ export default {
 
             }, keys)
 
-            this.axios.get(SERVICE_URL_v2 + '/event/getTrackListPage?', { params: param }).then((data) => {
+            http.get(SERVICE_URL_v2 + '/event/getTrackListPage?', { params: param }).then((data) => {
                 this.trackTitles = data.data.data.title;
                 this.trackList = data.data.data.data.resultList;
                 this.total = data.data.data.data.totalNum;
@@ -719,7 +727,7 @@ export default {
                 polygon: ''
             }, keys)
 
-            this.axios.get(SERVICE_URL_v2 + '/event/getCarChart?', { params: param }).then((data) => {
+            http.get(SERVICE_URL_v2 + '/event/getCarChart?', { params: param }).then((data) => {
                 var res = data.data.data;
                 var options = {
 
@@ -753,7 +761,7 @@ export default {
                 polygon: ''
             }, keys)
 
-            this.axios.get(SERVICE_URL_v2 + '/event/getHotChart?', { params: param }).then((data) => {
+            http.get(SERVICE_URL_v2 + '/event/getHotChart?', { params: param }).then((data) => {
 
                 var res = data.data.data,
                     features = [];
@@ -781,7 +789,7 @@ export default {
         },
     }
 
-};
+});
 </script>
 <style lang="scss" scoped>
 .video-play-box {

@@ -52,7 +52,7 @@
                         <div style="margin:10px;font-size: 14px;">车辆画像信息（依据最近月统计数据）</div>
                         <div style="height: 685px;">
                             <div style="display: flex;">
-                                <img :src="require('../assets/image/bdh/car-info.png')" alt="" style="width: 111px;height: 86px;">
+                                <img :src="assetUrl('../assets/image/bdh/car-info.png')" alt="" style="width: 111px;height: 86px;">
                                 <div class="vp-info" v-if="ports">
                                     <li>
                                         <b>常驶线路</b>
@@ -93,7 +93,15 @@
         </div>
     </div>
 </template>
-<script>
+<script lang="ts">
+import { defineComponent } from 'vue';
+import http from '@/api/http';
+
+const { SERVICE_URL } = window.APP_CONFIG;
+
+const assetModules = import.meta.glob('../assets/image/**/*', { eager: true, import: 'default' }) as Record<string, string>;
+const assetUrl = (path: string): string => assetModules[path] ?? '';
+
 import protobuf from "protobufjs";
 var AwesomeMessage, buffer, websocket;
 protobuf.load("static/carTrackObj.proto", function(err, root) {
@@ -106,7 +114,7 @@ protobuf.load("static/carTrackObj.proto", function(err, root) {
 
 });
 
-export default {
+export default defineComponent({
 
     data() {
         return {
@@ -132,11 +140,11 @@ export default {
 
         this.initMap()
     },
-    destroyed() {
+    unmounted() {
 
 
     },
-    beforeDestroy() {
+    beforeUnmount() {
 
     },
     watch: {
@@ -150,7 +158,7 @@ export default {
                 vehiclePlate: queryString
             };
 
-            this.axios.get(SERVICE_URL + 'device/getPlateNumberList?', { params: param }).then((data) => {
+            http.get(SERVICE_URL + 'device/getPlateNumberList?', { params: param }).then((data) => {
                 var result = data.data.data;
                 const formattedResult = result.map(item => ({ value: item }));
                 cb(formattedResult); // 返回对象数组
@@ -183,7 +191,7 @@ export default {
                 vehiclePlate: this.plateNumber
             };
 
-            this.axios.get(SERVICE_URL + 'device/getVehiclePortrait?', { params: param }).then((data) => {
+            http.get(SERVICE_URL + 'device/getVehiclePortrait?', { params: param }).then((data) => {
 
                 this.ports = data.data.data;
                 this.vehicleInfo = this.ports.vehicleInfo
@@ -297,7 +305,7 @@ export default {
         },
     }
 
-};
+});
 </script>
 <style lang="scss">
 .event-title {

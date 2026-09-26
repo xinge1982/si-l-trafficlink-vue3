@@ -46,7 +46,7 @@
                                 <p>
                                     <b>{{item.value}}</b>
                                     <em>{{item.unit}}</em>
-                                    <img :src="item.updown>0?require('../assets/image/screen/c/up1.png'):item.updown<0?require('../assets/image/screen/c/down1.png'):''" alt="">
+                                    <img :src="item.updown>0?assetUrl('../assets/image/screen/c/up1.png'):item.updown<0?assetUrl('../assets/image/screen/c/down1.png'):''" alt="">
                                     <span>{{item.name}}</span>
                                 </p>
                             </li>
@@ -78,7 +78,7 @@
                                         <el-option v-for="item in item.data" :key="i+item.value" :label="item.name" :value="item.value">
                                         </el-option>
                                     </el-select>
-                                    <el-input v-model="tableTypes1[menu.value].keys[item.key]" placeholder="回车搜索" v-if="item.type=='input'" @keydown.native="inputKeydown"></el-input>
+                                    <el-input v-model="tableTypes1[menu.value].keys[item.key]" placeholder="回车搜索" v-if="item.type=='input'" @keydown="inputKeydown"></el-input>
                                 </div>
                                 <div class="ect-select" v-show="dataType==2||dataType==3">
                                     <span class="title">开始时间</span>
@@ -141,7 +141,7 @@
                                 <el-table-column v-for="item in listData.title" :label="item.label" :prop="item.prop" :key="item.prop" v-if="!item.button">
                                 </el-table-column>
                                 <el-table-column label="操作" width="100" v-for="item in listData.title" :label="item.label" :key="item.prop" v-if="item.button">
-                                    <template slot-scope="scope">
+                                    <template #default="scope">
                                         <el-button type="text" size="small">{{scope.row.handleName}}</el-button>
                                     </template>
                                 </el-table-column>
@@ -152,7 +152,7 @@
                                 <el-table-column v-for="item in listData1.title" :label="item.label" :prop="item.prop" :key="item.prop" v-if="!item.button">
                                 </el-table-column>
                                 <el-table-column label="操作" width="100" v-for="item in listData1.title" :label="item.label" :key="item.prop" v-if="item.button">
-                                    <template slot-scope="scope">
+                                    <template #default="scope">
                                         <el-button @click="handleClick(scope.row)" type="text" size="small">{{scope.row.handleName}}</el-button>
                                     </template>
                                 </el-table-column>
@@ -168,10 +168,18 @@
         </div>
     </div>
 </template>
-<script>
+<script lang="ts">
+import { defineComponent } from 'vue';
+import http from '@/api/http';
+
+const { SERVICE_URL } = window.APP_CONFIG;
+
+const assetModules = import.meta.glob('../assets/image/**/*', { eager: true, import: 'default' }) as Record<string, string>;
+const assetUrl = (path: string): string => assetModules[path] ?? '';
+
 import eventInfo from './eventInfo.vue';
 import accidentInfo from './accidentInfo.vue';
-export default {
+export default defineComponent({
 
     components: {
         eventInfo,
@@ -294,7 +302,7 @@ export default {
         this.getStatisticsType()
         this.getDetailType()
     },
-    destroyed() {
+    unmounted() {
 
     },
 
@@ -355,12 +363,12 @@ export default {
 
             };
 
-            this.axios.get(SERVICE_URL + 'road/safety/v2/getEventTypes?', { params: param }).then((data) => {
+            http.get(SERVICE_URL + 'road/safety/v2/getEventTypes?', { params: param }).then((data) => {
                 this.menuData = data.data.data;
                 this.menuData.forEach(async (item) => {
                     try {
-                        var url = require('../assets/image/screen/c/' + item.icon + '.png');
-                        var url1 = require('../assets/image/screen/c/' + item.icon + '-a.png');
+                        var url = assetUrl('../assets/image/screen/c/' + item.icon + '.png');
+                        var url1 = assetUrl('../assets/image/screen/c/' + item.icon + '-a.png');
                         item.icon = url
                         item.icon1 = url1
 
@@ -385,7 +393,7 @@ export default {
                 rid: this.crossData.crossId
             };
 
-            this.axios.get(SERVICE_URL + 'road/safety/v2/getMenuList?', { params: param }).then((data) => {
+            http.get(SERVICE_URL + 'road/safety/v2/getMenuList?', { params: param }).then((data) => {
                 this.ectTypes = data.data.data;
                 this.getHourLineCharts()
             })
@@ -413,12 +421,12 @@ export default {
                 baseTime: this.dateKey[this.dateType.type + '2']
 
             };
-            this.axios.get(SERVICE_URL + 'road/safety/v2/getStatisticsData?', { params: param }).then((data) => {
+            http.get(SERVICE_URL + 'road/safety/v2/getStatisticsData?', { params: param }).then((data) => {
                 var res = data.data.data;
                 this.statistics = res.statistics;
                 this.statistics.forEach(async (item) => {
                     try {
-                        var url = require('../assets/image/screen/c/' + item.icon + '.png');
+                        var url = assetUrl('../assets/image/screen/c/' + item.icon + '.png');
                         item.icon = url
                     } catch (e) {}
                 });
@@ -468,7 +476,7 @@ export default {
                 baseTime: this.dateKey[this.dateType.type + '2']
             }
 
-            this.axios.post(SERVICE_URL + 'road/safety/v2/getHourLineCharts?', param).then((data) => {
+            http.post(SERVICE_URL + 'road/safety/v2/getHourLineCharts?', param).then((data) => {
 
                 var res = data.data.data;
                 var colors = [
@@ -570,7 +578,7 @@ export default {
                 baseTime: this.dateKey[this.dateType.type + '2']
             }
 
-            this.axios.post(SERVICE_URL + 'road/safety/v2/getDayLineCharts?', param).then((data) => {
+            http.post(SERVICE_URL + 'road/safety/v2/getDayLineCharts?', param).then((data) => {
 
                 var res = data.data.data;
                 var colors = [
@@ -665,7 +673,7 @@ export default {
 
             };
 
-            this.axios.get(SERVICE_URL + 'road/safety/v2/getStatisticsType?', { params: param }).then((data) => {
+            http.get(SERVICE_URL + 'road/safety/v2/getStatisticsType?', { params: param }).then((data) => {
                 this.tableTypes = data.data.data;
             })
         },
@@ -683,7 +691,7 @@ export default {
                 pageSize: 20
             }, keys)
 
-            this.axios.get(SERVICE_URL + 'road/safety/v2/getStatisticsList?', { params: param }).then((data) => {
+            http.get(SERVICE_URL + 'road/safety/v2/getStatisticsList?', { params: param }).then((data) => {
 
                 var res = this.listData = data.data.data;
                 this.tableData = res.data;
@@ -701,7 +709,7 @@ export default {
 
             };
 
-            this.axios.get(SERVICE_URL + 'road/safety/v2/getDetailType?', { params: param }).then((data) => {
+            http.get(SERVICE_URL + 'road/safety/v2/getDetailType?', { params: param }).then((data) => {
                 this.tableTypes1 = data.data.data;
             })
         },
@@ -719,7 +727,7 @@ export default {
                 pageSize: this.pageSize
             }, keys)
 
-            this.axios.get(SERVICE_URL + 'road/safety/v2/getDetailList?', { params: param }).then((data) => {
+            http.get(SERVICE_URL + 'road/safety/v2/getDetailList?', { params: param }).then((data) => {
 
                 var res = this.listData1 = data.data.data;
                 this.tableData1 = res.data;
@@ -780,7 +788,7 @@ export default {
         }
     }
 
-};
+});
 </script>
 <style lang="scss">
 .s-left {

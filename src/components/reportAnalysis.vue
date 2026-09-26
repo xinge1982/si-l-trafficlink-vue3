@@ -47,8 +47,16 @@
         </div>
     </div>
 </template>
-<script>
-export default {
+<script lang="ts">
+import { defineComponent } from 'vue';
+import http from '@/api/http';
+
+const { SERVICE_URL } = window.APP_CONFIG;
+
+const assetModules = import.meta.glob('../assets/image/**/*', { eager: true, import: 'default' }) as Record<string, string>;
+const assetUrl = (path: string): string => assetModules[path] ?? '';
+
+export default defineComponent({
 
     components: {
 
@@ -188,7 +196,7 @@ export default {
         this.getMenuList()
         // this.getType()
     },
-    destroyed() {
+    unmounted() {
 
     },
 
@@ -241,12 +249,12 @@ export default {
 
             };
 
-            this.axios.get(SERVICE_URL + 'report/getEventTypes?', { params: param }).then((data) => {
+            http.get(SERVICE_URL + 'report/getEventTypes?', { params: param }).then((data) => {
                 this.menuData = data.data.data;
                 this.menuData.forEach(async (item) => {
                     try {
-                        var url = require('../assets/image/screen/c/' + item.icon + '.png');
-                        var url1 = require('../assets/image/screen/c/' + item.icon + '-a.png');
+                        var url = assetUrl('../assets/image/screen/c/' + item.icon + '.png');
+                        var url1 = assetUrl('../assets/image/screen/c/' + item.icon + '-a.png');
                         item.icon = url
                         item.icon1 = url1
 
@@ -292,7 +300,7 @@ export default {
                 type: this.type
             }
 
-            this.axios.get(SERVICE_URL + 'report/getBarCharts?', { params: param }).then((data) => {
+            http.get(SERVICE_URL + 'report/getBarCharts?', { params: param }).then((data) => {
 
                 var res = data.data.data;
                 var colors = [
@@ -431,7 +439,7 @@ export default {
                 type: this.type
             }
 
-            this.axios.get(SERVICE_URL + 'report/getLineCharts?', { params: param }).then((data) => {
+            http.get(SERVICE_URL + 'report/getLineCharts?', { params: param }).then((data) => {
 
                 var res = data.data.data;
                 var colors = [
@@ -558,7 +566,7 @@ export default {
                 pageSize: this.pageSize
             }
 
-            this.axios.get(SERVICE_URL + 'safety/v2/getPageList?', { params: param }).then((data) => {
+            http.get(SERVICE_URL + 'safety/v2/getPageList?', { params: param }).then((data) => {
 
                 var res = this.listData = data.data.data;
                 this.tableData = res.data;
@@ -584,7 +592,7 @@ export default {
         }
     }
 
-};
+});
 </script>
 <style lang="scss">
 .s-left {

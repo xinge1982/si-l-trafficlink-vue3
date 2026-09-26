@@ -98,8 +98,14 @@
         </div>
     </div>
 </template>
-<script>
-export default {
+<script lang="ts">
+import { defineComponent } from 'vue';
+import http from '@/api/http';
+
+const { SERVICE_URL } = window.APP_CONFIG;
+
+
+export default defineComponent({
 
 
     data() {
@@ -188,7 +194,7 @@ export default {
         // this.inittopMap();
         this.initbomMap();
     },
-    destroyed() {
+    unmounted() {
         if (this.topMap && typeof this.topMap.remove === 'function') {
             this.topMap.remove();
         }
@@ -323,10 +329,10 @@ export default {
             };
 
             Promise.all([
-                this.axios.get(SERVICE_URL + 'organize/getCrossRidInfo?', {
+                http.get(SERVICE_URL + 'organize/getCrossRidInfo?', {
                     params: inParam
                 }),
-                this.axios.get(SERVICE_URL + 'organize/getCrossRidInfo?', {
+                http.get(SERVICE_URL + 'organize/getCrossRidInfo?', {
                     params: outParam
                 })
             ]).then(([inData, outData]) => {
@@ -354,7 +360,7 @@ export default {
                 endTime: this.endTime
             }, this.getDirectionParams());
             this.evaluateData = [];
-            this.axios.get(SERVICE_URL + 'organize/getEvaluateResult?', {
+            http.get(SERVICE_URL + 'organize/getEvaluateResult?', {
                 params: param
             }).then((data) => {
                 var result = data.data.data || {};
@@ -385,7 +391,7 @@ export default {
                 endTime: this.endTime
             };
 
-            this.axios.get(SERVICE_URL + 'organize/getCrossInfo?', {
+            http.get(SERVICE_URL + 'organize/getCrossInfo?', {
                 params: param
             }).then((data) => {
                 const res = data.data.data || [];
@@ -494,7 +500,7 @@ export default {
                 endTime: this.endTime
             }, this.getDirectionParams());
 
-            this.axios.get(SERVICE_URL + 'organize/getTrackInfo?', {
+            http.get(SERVICE_URL + 'organize/getTrackInfo?', {
                 params: param
             }).then((data) => {
                 var arr = []
@@ -591,7 +597,7 @@ export default {
 
             };
 
-            this.axios.get(SERVICE_URL + 'cross/evaluate/getLegend?', {
+            http.get(SERVICE_URL + 'cross/evaluate/getLegend?', {
                 params: param
             }).then((data) => {
 
@@ -609,7 +615,7 @@ export default {
                 endTime: this.endTime
             }, this.getDirectionParams());
             this.signalData = '';
-            this.axios.get(SERVICE_URL + 'organize/getEvaluateLine?', {
+            http.get(SERVICE_URL + 'organize/getEvaluateLine?', {
                 params: param
             }).then((data) => {
                 var result = data.data.data || {};
@@ -668,7 +674,7 @@ export default {
         }
     }
 
-};
+});
 </script>
 <style scoped>
 .ozt-map-box {

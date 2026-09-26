@@ -82,10 +82,18 @@
         </div>
     </div>
 </template>
-<script>
+<script lang="ts">
+import { defineComponent } from 'vue';
+import http from '@/api/http';
+
+const { SERVICE_URL } = window.APP_CONFIG;
+
+const assetModules = import.meta.glob('../assets/image/**/*', { eager: true, import: 'default' }) as Record<string, string>;
+const assetUrl = (path: string): string => assetModules[path] ?? '';
+
 import eventInfo from './eventInfo.vue';
 import accidentInfo from './accidentInfo.vue';
-export default {
+export default defineComponent({
 
     components: {
         eventInfo,
@@ -207,7 +215,7 @@ export default {
         this.getEventTypes()
 
     },
-    destroyed() {
+    unmounted() {
 
     },
 
@@ -265,7 +273,7 @@ export default {
 
             };
 
-            this.axios.get(SERVICE_URL + 'expressway/analysis/getEventTypes?', { params: param }).then((data) => {
+            http.get(SERVICE_URL + 'expressway/analysis/getEventTypes?', { params: param }).then((data) => {
                 this.menuData = data.data.data;
                 this.menuData.push({
                     name:'交通指标分析',
@@ -275,8 +283,8 @@ export default {
                 console.log(this.menuData)
                 this.menuData.forEach(async (item) => {
                     try {
-                        var url = require('../assets/image/screen/c/' + item.icon + '.png');
-                        var url1 = require('../assets/image/screen/c/' + item.icon + '-a.png');
+                        var url = assetUrl('../assets/image/screen/c/' + item.icon + '.png');
+                        var url1 = assetUrl('../assets/image/screen/c/' + item.icon + '-a.png');
                         item.icon = url
                         item.icon1 = url1
 
@@ -300,7 +308,7 @@ export default {
 
             };
 
-            this.axios.get(SERVICE_URL + 'expressway/analysis/getMenuList?', { params: param }).then((data) => {
+            http.get(SERVICE_URL + 'expressway/analysis/getMenuList?', { params: param }).then((data) => {
                 var res = this.ectTypes = data.data.data;
                 this.checkboxGroup1.push(res[this.menu.value].type1[0].data[0].value)
                 if (res[this.menu.value].type2 && res[this.menu.value].type2.length > 0) {
@@ -342,7 +350,7 @@ export default {
                 baseTime: this.dateKey[this.dateType.type + '2']
 
             };
-            this.axios.post(SERVICE_URL + 'expressway/analysis/getEventHot?', param).then((data) => {
+            http.post(SERVICE_URL + 'expressway/analysis/getEventHot?', param).then((data) => {
                 var res = data.data.data;
 
                 this.map.removeLayerAndSource('heatmapLayer')
@@ -387,7 +395,7 @@ export default {
                 baseTime: this.dateKey[this.dateType.type + '2']
             }
 
-            this.axios.post(SERVICE_URL + 'expressway/analysis/getEventChart?', param).then((data) => {
+            http.post(SERVICE_URL + 'expressway/analysis/getEventChart?', param).then((data) => {
                 var res = data.data.data;
                 var colors = [
 
@@ -503,7 +511,7 @@ export default {
                 baseTime: this.dateKey[this.dateType.type + '2']
             }
 
-            this.axios.post(SERVICE_URL + 'expressway/analysis/getIdxChart?', param).then((data) => {
+            http.post(SERVICE_URL + 'expressway/analysis/getIdxChart?', param).then((data) => {
 
                 var res = data.data.data;
                 var colors = [
@@ -614,7 +622,7 @@ export default {
 
             };
 
-            this.axios.get(SERVICE_URL + 'safety/v2/getStatisticsType?', { params: param }).then((data) => {
+            http.get(SERVICE_URL + 'safety/v2/getStatisticsType?', { params: param }).then((data) => {
                 this.tableTypes = data.data.data;
             })
         },
@@ -632,7 +640,7 @@ export default {
                 pageSize: 20
             }, keys)
 
-            this.axios.get(SERVICE_URL + 'safety/v2/getStatisticsList?', { params: param }).then((data) => {
+            http.get(SERVICE_URL + 'safety/v2/getStatisticsList?', { params: param }).then((data) => {
 
                 var res = this.listData = data.data.data;
                 this.tableData = res.data;
@@ -650,7 +658,7 @@ export default {
 
             };
 
-            this.axios.get(SERVICE_URL + 'safety/v2/getDetailType?', { params: param }).then((data) => {
+            http.get(SERVICE_URL + 'safety/v2/getDetailType?', { params: param }).then((data) => {
                 this.tableTypes1 = data.data.data;
             })
         },
@@ -668,7 +676,7 @@ export default {
                 pageSize: this.pageSize
             }, keys)
 
-            this.axios.get(SERVICE_URL + 'safety/v2/getDetailList?', { params: param }).then((data) => {
+            http.get(SERVICE_URL + 'safety/v2/getDetailList?', { params: param }).then((data) => {
 
                 var res = this.listData1 = data.data.data;
                 this.tableData1 = res.data;
@@ -713,7 +721,7 @@ export default {
             }
 
 
-            this.axios.post(SERVICE_URL + 'expressway/analysis/getStatistics?', param).then((data) => {
+            http.post(SERVICE_URL + 'expressway/analysis/getStatistics?', param).then((data) => {
                 this.analysisFlow = data.data.data.analysisFlow;
                 this.baseFlow = data.data.data.baseFlow;
             })
@@ -740,7 +748,7 @@ export default {
         }
     }
 
-};
+});
 </script>
 <style lang="scss" scoped>
 .s-left {

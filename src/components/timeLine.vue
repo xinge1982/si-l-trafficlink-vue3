@@ -38,9 +38,11 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
+import { defineComponent } from 'vue';
 
-export default {
+
+export default defineComponent({
   name: 'lk-timeline',
   data() {
     return {
@@ -127,7 +129,7 @@ export default {
     }
     window.addEventListener('resize', this.resizeHandler)
   },
-  beforeDestroy() {
+  beforeUnmount() {
     if (this.resizeHandler) {
       window.removeEventListener('resize', this.resizeHandler)
       this.resizeHandler = null
@@ -226,7 +228,7 @@ export default {
       this.options.speed = (this.options.speed*10 - this.options.step*10)/10
     }
   }
-}
+})
 </script>
 <style scoped>
 

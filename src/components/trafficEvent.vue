@@ -105,7 +105,7 @@
                 </div>
             </div>
         </div>
-        <el-dialog top="25vh" append-to-body :close-on-click-modal="false" title="车辆范围管理" :visible.sync="dialogTableVisible" custom-class="traffic-dialog">
+        <el-dialog v-model="dialogTableVisible" top="25vh" append-to-body :close-on-click-modal="false" title="车辆范围管理" custom-class="traffic-dialog">
             <div style="display: flex;margin-bottom: 25px;">
                 <el-upload class="upload-demo" :show-file-list="false" :headers="uploadHeaders" :action="SERVICE_URL +'eventByExcel/uploadExcel'" :on-success="handleSuccess" :on-error="handleError">
                     <el-button size="small" type="primary" style="padding: 9px 15px;">上传查询条件</el-button>
@@ -116,11 +116,11 @@
             <template>
                 <el-table :data="fileList" style="width: 100%;" height="400">
                    <!--  <el-table-column type="expand">
-                        <template slot-scope="props">
+                        <template #default="props">
                             <el-form label-position="left" inline class="demo-table-expand">
                                 <el-table :data="props.row.plateNumbers" border  style="background: none;" :header-row-class-name="'list-header'" :row-class-name="'dir-row dir-row-c'">
                                     <el-table-column label="车辆号牌" width="120">
-                                        <template slot-scope="scope">
+                                        <template #default="scope">
                                             {{scope.row}}
                                         </template>
                                     </el-table-column>
@@ -135,7 +135,7 @@
                     <el-table-column prop="userName" label="上传用户">
                     </el-table-column>
                     <el-table-column label="操作" width="180">
-                        <template slot-scope="scope">
+                        <template #default="scope">
                             <el-button @click="applyClick(scope.row)" size="small">应用</el-button>
                             <el-button size="small" @click="DownloadClick(scope.row)">下载</el-button>
                             <el-button type="danger" size="small" @click="deleteClick(scope.row)">删除</el-button>
@@ -146,10 +146,16 @@
         </el-dialog>
     </div>
 </template>
-<script>
+<script lang="ts">
+import { defineComponent } from 'vue';
+import http from '@/api/http';
+
+const { SERVICE_URL, SERVICE_URL_v2, WEB_TYPE } = window.APP_CONFIG;
+
+
 import eventInfo from './eventInfo.vue';
 import accidentInfo from './accidentInfo.vue';
-export default {
+export default defineComponent({
     props: ['eventClickTime'],
     components: { eventInfo, accidentInfo },
     data() {
@@ -220,9 +226,9 @@ export default {
         this.initMap()
 
     },
-    destroyed() {
+    unmounted() {
     },
-    beforeDestroy() {
+    beforeUnmount() {
 
 
     },
@@ -268,7 +274,7 @@ export default {
 
             };
 
-            this.axios.get(SERVICE_URL + 'eventByExcel/getFiles?', { params: param }).then((data) => {
+            http.get(SERVICE_URL + 'eventByExcel/getFiles?', { params: param }).then((data) => {
                 this.fileList = this.filesOptions = data.data.data;
 
 
@@ -306,7 +312,7 @@ export default {
             };
             this.$confirm('确认删除？')
                 .then(_ => {
-                    this.axios.delete(SERVICE_URL + 'eventByExcel/deleteById?', { params: param }).then((data) => {
+                    http.delete(SERVICE_URL + 'eventByExcel/deleteById?', { params: param }).then((data) => {
                         this.$message({
                             message: data.data.data,
                             type: 'success',
@@ -350,7 +356,7 @@ export default {
             var param = {
             };
             console.log('add cross location points')
-            this.axios.get(SERVICE_URL_v2 + '/getCrossLocation?', { params: param }).then((data) => {
+            http.get(SERVICE_URL_v2 + '/getCrossLocation?', { params: param }).then((data) => {
 
                 var map = _this.eventMap;
                 var res = data.data.data;
@@ -423,7 +429,7 @@ export default {
 
             };
 
-            this.axios.get(SERVICE_URL_v2 + '/event/getMenuType?', { params: param }).then((data) => {
+            http.get(SERVICE_URL_v2 + '/event/getMenuType?', { params: param }).then((data) => {
                 var res = data.data.data;
                 this.keys = res.keys;
                 this.types = res.types;
@@ -457,7 +463,7 @@ export default {
                 crossId: this.keys.selected1
             };
 
-            this.axios.get(SERVICE_URL_v2 + '/event/getMenuEventType?', { params: param }).then((data) => {
+            http.get(SERVICE_URL_v2 + '/event/getMenuEventType?', { params: param }).then((data) => {
                 var res = data.data.data;
                 for (var k in res.keys) {
                     if (k == res.types[0].key) {
@@ -488,7 +494,7 @@ export default {
                 fileId:this.fileId
             }, keys)
 
-            this.axios.get(SERVICE_URL_v2 + '/event/getStatisticsList?', { params: param }).then((data) => {
+            http.get(SERVICE_URL_v2 + '/event/getStatisticsList?', { params: param }).then((data) => {
                 this.eventTitle = data.data.data.title;
                 this.eventList = data.data.data.data;
             })
@@ -508,7 +514,7 @@ export default {
 
             }, keys)
 
-            this.axios.get(SERVICE_URL_v2 + '/event/getTendencyChart?', { params: param }).then((data) => {
+            http.get(SERVICE_URL_v2 + '/event/getTendencyChart?', { params: param }).then((data) => {
                 var res = data.data.data;
 
 
@@ -567,7 +573,7 @@ export default {
 
             }, keys)
 
-            this.axios.get(SERVICE_URL_v2 + '/event/getTrackListPage?', { params: param }).then((data) => {
+            http.get(SERVICE_URL_v2 + '/event/getTrackListPage?', { params: param }).then((data) => {
                 this.trackTitles = data.data.data.title;
                 this.trackList = data.data.data.data.resultList;
                 this.total = data.data.data.data.totalNum;
@@ -605,7 +611,7 @@ export default {
                 fileId:this.fileId
             }, keys)
 
-            this.axios.get(SERVICE_URL_v2 + '/event/getCarChart', { params: param }).then((data) => {
+            http.get(SERVICE_URL_v2 + '/event/getCarChart', { params: param }).then((data) => {
                 var res = data.data.data;
                 var chartData = (res.series && res.series[0] && res.series[0].data) || [];
                 var xAxisData = chartData.map(function(item) {
@@ -669,7 +675,7 @@ export default {
                 fileId:this.fileId
             }, keys)
 
-            this.axios.get(SERVICE_URL_v2 + '/event/getHotChart?', { params: param }).then((data) => {
+            http.get(SERVICE_URL_v2 + '/event/getHotChart?', { params: param }).then((data) => {
                 var res = data.data.data,
                     features = [],
                     mag = 1.0,
@@ -701,7 +707,7 @@ export default {
         },
     }
 
-};
+});
 </script>
 <style lang="scss" scoped>
 .event-title {

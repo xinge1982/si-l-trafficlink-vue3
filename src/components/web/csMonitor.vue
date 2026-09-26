@@ -56,10 +56,16 @@
         </div>
     </div>
 </template>
-<script>
+<script lang="ts">
+import { defineComponent } from 'vue';
+import http from '@/api/http';
+
+const { SERVICE_URL, WEBSOCKET_URL } = window.APP_CONFIG;
+
+
 import trackPlay from './trackPlay.vue';
 
-export default {
+export default defineComponent({
 
     components: {
         trackPlay
@@ -108,11 +114,11 @@ export default {
         // this.trackPlayLoad();
         this.openInterval()
     },
-    destroyed() {
+    unmounted() {
         clearInterval(this.invt);
         this.invt = null;
     },
-    beforeDestroy() {
+    beforeUnmount() {
 
 
         clearInterval(this.invt);
@@ -147,9 +153,9 @@ export default {
                 rid: this.ridActive
             };
 
-            this.axios.get(WEBSOCKET_URL + '/cross/api/getMsgFlow?', {
+            http.get(WEBSOCKET_URL + '/cross/api/getMsgFlow?', {
                 params: param,
-                cancelToken: new this.axios.CancelToken(function executor(c) {
+                cancelToken: new http.CancelToken(function executor(c) {
                     _this.source = c;
                 })
             }).then((data) => {
@@ -167,7 +173,7 @@ export default {
 
             };
 
-            this.axios.get(SERVICE_URL + 'organize/getCrossRidInfo?', {
+            http.get(SERVICE_URL + 'organize/getCrossRidInfo?', {
                 params: param
             }).then((data) => {
                 this.ridList = data.data.data;
@@ -185,7 +191,7 @@ export default {
 
             }
 
-            this.axios.get(WEBSOCKET_URL + '/cross/api/getRidLaneFlow?', { params: param }).then((data) => {
+            http.get(WEBSOCKET_URL + '/cross/api/getRidLaneFlow?', { params: param }).then((data) => {
                 this.laneNames = data.data.laneNames;
                 this.laneDatas = data.data;
 
@@ -200,7 +206,7 @@ export default {
 
             }
 
-            this.axios.get(WEBSOCKET_URL + '/cross/api/getCrossFlow?', { params: param }).then((data) => {
+            http.get(WEBSOCKET_URL + '/cross/api/getCrossFlow?', { params: param }).then((data) => {
 
                 this.crossStat = data.data.data;
 
@@ -234,7 +240,7 @@ export default {
 
     }
 
-};
+});
 </script>
 <style scoped>
 .list-right-box {

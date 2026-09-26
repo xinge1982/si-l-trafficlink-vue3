@@ -15,7 +15,7 @@
                                     <el-option v-for="item in item.data" :key="item.value" :label="item.name" :value="item.value">
                                     </el-option>
                                 </el-select>
-                                <el-input v-model="selects.keys[item.key]" placeholder="回车搜索" v-if="item.type=='input'" @keydown.native="inputKeydown"></el-input>
+                                <el-input v-model="selects.keys[item.key]" placeholder="回车搜索" v-if="item.type=='input'" @keydown="inputKeydown"></el-input>
                             </div>
                             <div class="ect-select">
                                 <span class="title">开始时间</span>
@@ -32,7 +32,7 @@
                          <el-table-column style="cursor: pointer;" v-for="item in tableData.title" :label="item.label" :prop="item.prop" :key="item.prop" v-if="!item.button" :width="item.label=='设备编号'?'350':item.label.indexOf('时间')>-1?'170':''">
                             </el-table-column>
                             <el-table-column label="操作" width="100" v-for="item in tableData.title" :label="item.label" :key="item.prop" v-if="item.button">
-                                <template slot-scope="scope">
+                                <template #default="scope">
                                     <el-button type="text" size="small" @click.stop="handleClick(scope.row)">{{scope.row.operate}}</el-button>
                                 </template>
                             </el-table-column>
@@ -64,9 +64,17 @@
         </div>
     </div>
 </template>
-<script>
+<script lang="ts">
+import { defineComponent } from 'vue';
+import http from '@/api/http';
+
+const { SERVICE_URL, SERVICE_URL_v2 } = window.APP_CONFIG;
+
+const assetModules = import.meta.glob('../assets/image/**/*', { eager: true, import: 'default' }) as Record<string, string>;
+const assetUrl = (path: string): string => assetModules[path] ?? '';
+
 import FlvJs from './video/FlvJs.vue'
-export default {
+export default defineComponent({
     props: ['type'],
     components: {
         FlvJs
@@ -82,7 +90,7 @@ export default {
             evtTotal: 0,
             videoUrl: '',
             aMap: null,
-            icon3: require('../assets/image/screen/12k/video.png'),
+            icon3: assetUrl('../assets/image/screen/12k/video.png'),
             rowData: '',
             getIndex: null,
             videoRid:'',
@@ -107,7 +115,7 @@ export default {
         this.getFireMenu()
 
     },
-    destroyed() {
+    unmounted() {
         this.playVideo(1)
     },
 
@@ -160,7 +168,7 @@ export default {
 
             };
 
-            this.axios.get(SERVICE_URL_v2 + '/alarm/' + url, { params: param }).then((data) => {
+            http.get(SERVICE_URL_v2 + '/alarm/' + url, { params: param }).then((data) => {
                 this.selects = data.data.data;
 
                 this.getFireEventList()
@@ -179,7 +187,7 @@ export default {
                 pageSize: this.pageSize
             }, keys)
 
-            this.axios.get(SERVICE_URL_v2 + '/alarm/' + url, { params: param }).then((data) => {
+            http.get(SERVICE_URL_v2 + '/alarm/' + url, { params: param }).then((data) => {
                 this.tableData = data.data.data;
                 this.evtTotal = data.data.data.data.totalNum;
                 var res = data.data.data.data.resultList,
@@ -269,7 +277,7 @@ export default {
             if (operation==0) {
                 this.videoUrl = '';
             }
-            this.axios.get(SERVICE_URL + 'VCN/playVideo?', { params: param }).then((data) => {
+            http.get(SERVICE_URL + 'VCN/playVideo?', { params: param }).then((data) => {
                 this.videoRid = this.rowData.rid;
                 this.videoId = cameraCode;
                 if (data.data.code == -1) {
@@ -305,7 +313,7 @@ export default {
         },
     }
 
-};
+});
 </script>
 <style lang="scss">
 .alarm-table {

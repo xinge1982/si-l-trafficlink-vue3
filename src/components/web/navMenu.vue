@@ -10,8 +10,14 @@
         <!-- <router-view/> -->
     </div>
 </template>
-<script>
-export default {
+<script lang="ts">
+import { defineComponent } from 'vue';
+
+const CS_WEBSOCKET_URL = window.APP_CONFIG.CS_WEBSOCKET_URL
+    ?? window.APP_CONFIG.WEBSOCKET_URL.replace(/^http/, 'ws');
+
+
+export default defineComponent({
 
     components: {
 
@@ -61,7 +67,7 @@ export default {
 
 
     },
-    destroyed() {
+    unmounted() {
 
         this.closeWebsocket();
     },
@@ -125,7 +131,7 @@ export default {
 
     }
 
-};
+});
 </script>
 <style scoped>
 .cross-box {

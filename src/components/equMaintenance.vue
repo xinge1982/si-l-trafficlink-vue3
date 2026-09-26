@@ -100,7 +100,13 @@
         </div>
     </div>
 </template>
-<script>
+<script lang="ts">
+import { defineComponent } from 'vue';
+import http from '@/api/http';
+
+const { SERVICE_URL_v2, DEVICESERVICE_URL } = window.APP_CONFIG;
+
+
 import protobuf from "protobufjs";
 var AwesomeMessage, buffer, websocket;
 protobuf.load("static/carTrackObj.proto", function(err, root) {
@@ -114,7 +120,7 @@ protobuf.load("static/carTrackObj.proto", function(err, root) {
 });
 import trackPlayback from './trackPlayback.vue';
 import FlvJs from './video/FlvJs.vue'
-export default {
+export default defineComponent({
 
     components: { trackPlayback, FlvJs },
     data() {
@@ -237,11 +243,11 @@ export default {
 
         this.deviceTypeList()
     },
-    destroyed() {
+    unmounted() {
 
 
     },
-    beforeDestroy() {
+    beforeUnmount() {
 
     },
     watch: {
@@ -403,7 +409,7 @@ export default {
                 polygon: ''
             }, keys)
 
-            this.axios.get(SERVICE_URL_v2 + '/event/getHotChart?', { params: param }).then((data) => {
+            http.get(SERVICE_URL_v2 + '/event/getHotChart?', { params: param }).then((data) => {
 
                 var res = data.data.data,
                     features = [];
@@ -431,7 +437,7 @@ export default {
         },
     }
 
-};
+});
 </script>
 <style lang="scss">
 .el-table .highlight-row {
