@@ -187,15 +187,16 @@
 </template>
 <script setup lang="ts">
 import http from '@/api/http';
+import eventInfo from './eventInfo.vue';
+import accidentInfo from './accidentInfo.vue';
 
+defineOptions((() => {
 const { SERVICE_URL_v2 } = window.APP_CONFIG;
 
 const assetModules = import.meta.glob('../assets/image/**/*', { eager: true, import: 'default' }) as Record<string, string>;
 const assetUrl = (path: string): string => assetModules[path] ?? '';
 
-import eventInfo from './eventInfo.vue';
-import accidentInfo from './accidentInfo.vue';
-defineOptions({
+return {
 
     components: {
         eventInfo,
@@ -844,7 +845,7 @@ defineOptions({
         }
     }
 
-});
+} })());
 </script>
 <style lang="scss">
 .s-left {

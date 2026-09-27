@@ -59,11 +59,10 @@
 
 <script setup lang="ts">
 import http from '@/api/http';
-
-const { SERVICE_URL } = window.APP_CONFIG;
-
-
 import timeLine from './timeLine.vue';
+
+defineOptions((() => {
+const { SERVICE_URL } = window.APP_CONFIG;
 
 	function getOrCreateChart(domId) {
 		var dom = document.getElementById(domId);
@@ -73,7 +72,7 @@ import timeLine from './timeLine.vue';
 		return echarts.getInstanceByDom(dom) || echarts.init(dom);
 	}
 	
-	defineOptions({
+	return {
 		// props:['timeRange'],
 		components: {
 			timeLine
@@ -520,7 +519,7 @@ import timeLine from './timeLine.vue';
 	       	}
 		}
     
-	});
+	} })());
 </script>
 
 <style scoped>

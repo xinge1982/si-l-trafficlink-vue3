@@ -95,13 +95,14 @@
 </template>
 <script setup lang="ts">
 import http from '@/api/http';
+import protobuf from "protobufjs";
 
+defineOptions((() => {
 const { SERVICE_URL } = window.APP_CONFIG;
 
 const assetModules = import.meta.glob('../assets/image/**/*', { eager: true, import: 'default' }) as Record<string, string>;
 const assetUrl = (path: string): string => assetModules[path] ?? '';
 
-import protobuf from "protobufjs";
 var AwesomeMessage, buffer, websocket;
 protobuf.load("static/carTrackObj.proto", function(err, root) {
     if (err)
@@ -113,7 +114,7 @@ protobuf.load("static/carTrackObj.proto", function(err, root) {
 
 });
 
-defineOptions({
+return {
 
     data() {
         return {
@@ -304,7 +305,7 @@ defineOptions({
         },
     }
 
-});
+} })());
 </script>
 <style lang="scss">
 .event-title {

@@ -1,5 +1,4 @@
-import Vue from 'vue'
-const _this = new Vue();
+import { ElMessage } from 'element-plus'
 import CryptoJS from "crypto-js";
 import possibleJamImg from '../assets/image/possibleJam.png'
 import dirImg from '../assets/image/dir.png'
@@ -184,7 +183,7 @@ export default {
             };
             this.param.markers.push(obj);
         } else {
-            _this.$message.error('经纬度缺失');
+            ElMessage.error('经纬度缺失');
         };
 
     },
@@ -233,7 +232,7 @@ export default {
         }, options);
         // console.log(options)
         if (options.lines.length == 0) {
-            _this.$message.error('经纬度缺失');
+            ElMessage.error('经纬度缺失');
             return
         };
         var geojson = {
@@ -625,7 +624,7 @@ export default {
         }, options);
 
         if (options.gons.length == 0) {
-            _this.$message.error('经纬度缺失');
+            ElMessage.error('经纬度缺失');
             return
         };
         var geojson = {

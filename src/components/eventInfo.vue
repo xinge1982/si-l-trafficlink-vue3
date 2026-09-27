@@ -190,15 +190,16 @@
 </template>
 <script setup lang="ts">
 import http from '@/api/http';
+import FlvJs from './video/FlvJs.vue'
+import trackPlayback from './trackPlayback.vue';
+import protobuf from "protobufjs";
 
+defineOptions((() => {
 const { SERVICE_URL, DEVICESERVICE_URL, WEBSOCKET_URL } = window.APP_CONFIG;
 
 const assetModules = import.meta.glob('../assets/image/**/*', { eager: true, import: 'default' }) as Record<string, string>;
 const assetUrl = (path: string): string => assetModules[path] ?? '';
 
-import FlvJs from './video/FlvJs.vue'
-import trackPlayback from './trackPlayback.vue';
-import protobuf from "protobufjs";
 var AwesomeMessage;
 protobuf.load("static/carTrackObj.proto", function(err, root) {
     if (err)
@@ -210,7 +211,7 @@ protobuf.load("static/carTrackObj.proto", function(err, root) {
 
 });
 
-defineOptions({
+return {
     props: ['eventData', 'type', 'returnHome'],
     components: {
         FlvJs,
@@ -1207,7 +1208,7 @@ defineOptions({
 
     }
 
-});
+} })());
 </script>
 <style lang="scss">
 .event-box-title {

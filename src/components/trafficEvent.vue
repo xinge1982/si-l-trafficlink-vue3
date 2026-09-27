@@ -148,13 +148,13 @@
 </template>
 <script setup lang="ts">
 import http from '@/api/http';
-
-const { SERVICE_URL, SERVICE_URL_v2, WEB_TYPE } = window.APP_CONFIG;
-
-
 import eventInfo from './eventInfo.vue';
 import accidentInfo from './accidentInfo.vue';
-defineOptions({
+
+defineOptions((() => {
+const { SERVICE_URL, SERVICE_URL_v2, WEB_TYPE } = window.APP_CONFIG;
+
+return {
     props: ['eventClickTime'],
     components: { eventInfo, accidentInfo },
     data() {
@@ -706,7 +706,7 @@ defineOptions({
         },
     }
 
-});
+} })());
 </script>
 <style lang="scss" scoped>
 .event-title {

@@ -41,7 +41,7 @@
 <script setup lang="ts">
 
 
-defineOptions({
+defineOptions((() => ({
   name: 'lk-timeline',
   data() {
     return {
@@ -227,7 +227,7 @@ defineOptions({
       this.options.speed = (this.options.speed*10 - this.options.step*10)/10
     }
   }
-})
+}))())
 </script>
 <style scoped>
 

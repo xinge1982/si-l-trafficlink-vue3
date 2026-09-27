@@ -166,13 +166,13 @@
 </template>
 <script setup lang="ts">
 import http from '@/api/http';
-
-const { SERVICE_URL, WEBSOCKET_URL } = window.APP_CONFIG;
-
-
 import signalState from './signalState.vue';
 import phase from './phase/phase.vue';
-defineOptions({
+
+defineOptions((() => {
+const { SERVICE_URL, WEBSOCKET_URL } = window.APP_CONFIG;
+
+return {
     components: {
         signalState,
         phase
@@ -1048,7 +1048,7 @@ defineOptions({
 
     }
 
-});
+} })());
 </script>
 <style scoped lang="scss">
 .cross-map {

@@ -101,10 +101,11 @@
 <script setup lang="ts">
 import http from '@/api/http';
 
+defineOptions((() => {
 const { SERVICE_URL } = window.APP_CONFIG;
 
 
-defineOptions({
+return {
 
 
     data() {
@@ -673,7 +674,7 @@ defineOptions({
         }
     }
 
-});
+} })());
 </script>
 <style scoped>
 .ozt-map-box {

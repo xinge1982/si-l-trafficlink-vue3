@@ -12,11 +12,12 @@
 </template>
 <script setup lang="ts">
 
+defineOptions((() => {
 const CS_WEBSOCKET_URL = window.APP_CONFIG.CS_WEBSOCKET_URL
     ?? window.APP_CONFIG.WEBSOCKET_URL.replace(/^http/, 'ws');
 
 
-defineOptions({
+return {
 
     components: {
 
@@ -130,7 +131,7 @@ defineOptions({
 
     }
 
-});
+} })());
 </script>
 <style scoped>
 .cross-box {

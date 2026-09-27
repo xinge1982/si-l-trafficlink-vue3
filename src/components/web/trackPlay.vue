@@ -27,6 +27,7 @@
 <script setup lang="ts">
 import http from '@/api/http';
 
+defineOptions((() => {
 const { SERVICE_URL } = window.APP_CONFIG;
 const CS_WEBSOCKET_URL = window.APP_CONFIG.CS_WEBSOCKET_URL
     ?? window.APP_CONFIG.WEBSOCKET_URL.replace(/^http/, 'ws');
@@ -37,7 +38,7 @@ var route = [],
     steps, counter, Intertime;
 var size = 200;
 
-defineOptions({
+return {
 
     props: ["crossData"],
     data() {
@@ -251,7 +252,7 @@ defineOptions({
 
     },
 
-});
+} })());
 </script>
 <style scoped>
 .crossInfo {

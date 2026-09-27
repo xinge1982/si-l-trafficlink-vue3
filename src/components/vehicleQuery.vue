@@ -93,13 +93,16 @@
 </template>
 <script setup lang="ts">
 import http from '@/api/http';
+import protobuf from "protobufjs";
+import trackPlayback from './trackPlayback.vue';
+import FlvJs from './video/FlvJs.vue'
 
+defineOptions((() => {
 const { SERVICE_URL, SERVICE_URL_v2, DEVICESERVICE_URL, WEBSOCKET_URL } = window.APP_CONFIG;
 
 const assetModules = import.meta.glob('../assets/image/**/*', { eager: true, import: 'default' }) as Record<string, string>;
 const assetUrl = (path: string): string => assetModules[path] ?? '';
 
-import protobuf from "protobufjs";
 var AwesomeMessage;
 protobuf.load("static/carTrackObj.proto", function(err, root) {
     if (err)
@@ -110,9 +113,7 @@ protobuf.load("static/carTrackObj.proto", function(err, root) {
 
 
 });
-import trackPlayback from './trackPlayback.vue';
-import FlvJs from './video/FlvJs.vue'
-defineOptions({
+return {
 
     components: { trackPlayback, FlvJs },
     data() {
@@ -788,7 +789,7 @@ defineOptions({
         },
     }
 
-});
+} })());
 </script>
 <style lang="scss" scoped>
 .video-play-box {

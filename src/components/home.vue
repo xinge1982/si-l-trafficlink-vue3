@@ -239,7 +239,6 @@
                     </div>
                     <div :style="checktoolActive.indexOf(6)>-1?'z-index:80;':''" v-if="checktoolActive.indexOf(6)>-1" class="t-map-box">
                        <!--  <ABCCrossroads3D :lookAt="lookAt" :data="options.tracks" :tilesets="tilesets" :modelPath="modelPath" :skyBoxPath="skyBoxPath" :facilityPath="facilityPath" :pause="pause" :brightness="1" :imageryLayers="imagerUrl" :maximumZoomDistance="900" :maxViewDist="26000" :tracking="tracking" @onClick="onClick" @cofirmFire="cofirmFire" :fixed="fixed" ref="cross3d" /> -->
-                         <cesiumTrack :track="options.tracks"></cesiumTrack>
                     </div>
                     <div class="road-network-info-box" :class="checktoolActive.indexOf(7)>-1?'position-left':''">
                         <p class="title">{{rightTitle}}</p>
@@ -474,7 +473,6 @@ import protobuf from "protobufjs";
 import http from '@/api/http';
 import { assetUrl } from '@/tool/assetUrl';
 import homeTrack from './homeTrack.vue';
-import cesiumTrack from './cesiumTrack.vue';
 import crossBox from './cross.vue';
 import roadAnalyse from './roadAnalyse.vue';
 import alarmTable from './alarmTable.vue';
@@ -518,7 +516,7 @@ defineOptions((() => {
     }
 
     return {
-    components: { homeTrack,cesiumTrack, crossBox, roadAnalyse, alarmTable, infoPublish, trafficEvent, globalConfig, vehicleQuery, netWorkInfo, FlvJs, eventInfo },
+    components: { homeTrack, crossBox, roadAnalyse, alarmTable, infoPublish, trafficEvent, globalConfig, vehicleQuery, netWorkInfo, FlvJs, eventInfo },
     data() {
         return {
             title: window.APP_CONFIG.WEB_TITLE_V2,

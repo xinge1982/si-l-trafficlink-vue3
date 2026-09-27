@@ -58,13 +58,12 @@
 </template>
 <script setup lang="ts">
 import http from '@/api/http';
-
-const { SERVICE_URL, WEBSOCKET_URL } = window.APP_CONFIG;
-
-
 import trackPlay from './trackPlay.vue';
 
-defineOptions({
+defineOptions((() => {
+const { SERVICE_URL, WEBSOCKET_URL } = window.APP_CONFIG;
+
+return {
 
     components: {
         trackPlay
@@ -239,7 +238,7 @@ defineOptions({
 
     }
 
-});
+} })());
 </script>
 <style scoped>
 .list-right-box {

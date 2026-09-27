@@ -102,11 +102,13 @@
 </template>
 <script setup lang="ts">
 import http from '@/api/http';
+import protobuf from "protobufjs";
+import trackPlayback from './trackPlayback.vue';
+import FlvJs from './video/FlvJs.vue'
 
+defineOptions((() => {
 const { SERVICE_URL_v2, DEVICESERVICE_URL } = window.APP_CONFIG;
 
-
-import protobuf from "protobufjs";
 var AwesomeMessage, buffer, websocket;
 protobuf.load("static/carTrackObj.proto", function(err, root) {
     if (err)
@@ -117,9 +119,7 @@ protobuf.load("static/carTrackObj.proto", function(err, root) {
 
 
 });
-import trackPlayback from './trackPlayback.vue';
-import FlvJs from './video/FlvJs.vue'
-defineOptions({
+return {
 
     components: { trackPlayback, FlvJs },
     data() {
@@ -436,7 +436,7 @@ defineOptions({
         },
     }
 
-});
+} })());
 </script>
 <style lang="scss">
 .el-table .highlight-row {

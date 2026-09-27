@@ -19,10 +19,10 @@
 <script setup lang="ts">
 import http from '@/api/http';
 
+defineOptions((() => {
 const { SERVICE_URL_v2 } = window.APP_CONFIG;
 
-
-defineOptions({
+return {
     props: ["isShowPopup"],
     data() {
         return {
@@ -97,7 +97,7 @@ defineOptions({
     mounted() {
         this.getSwitch()
     }
-});
+} })());
 </script>
 <style scoped>
 </style>
