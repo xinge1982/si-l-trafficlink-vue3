@@ -16,14 +16,13 @@
         </el-dialog>
     </div>
 </template>
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
 import http from '@/api/http';
 
 const { SERVICE_URL_v2 } = window.APP_CONFIG;
 
 
-export default defineComponent({
+defineOptions({
     props: ["isShowPopup"],
     data() {
         return {

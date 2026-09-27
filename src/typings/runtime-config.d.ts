@@ -58,6 +58,7 @@ declare global {
         SERVICE_URL_screen: string
         WEBSOCKET_URL: string
         CS_WEBSOCKET_URL?: string
+        CESIUM_ION_TOKEN?: string
         LOGO_SERVICE: string
         DEVICESERVICE_URL: string
 

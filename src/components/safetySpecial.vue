@@ -185,8 +185,7 @@
         </div>
     </div>
 </template>
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
 import http from '@/api/http';
 
 const { SERVICE_URL_v2 } = window.APP_CONFIG;
@@ -196,7 +195,7 @@ const assetUrl = (path: string): string => assetModules[path] ?? '';
 
 import eventInfo from './eventInfo.vue';
 import accidentInfo from './accidentInfo.vue';
-export default defineComponent({
+defineOptions({
 
     components: {
         eventInfo,

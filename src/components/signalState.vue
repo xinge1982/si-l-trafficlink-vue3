@@ -57,8 +57,7 @@
 	</div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
 import http from '@/api/http';
 
 const { SERVICE_URL } = window.APP_CONFIG;
@@ -74,7 +73,7 @@ import timeLine from './timeLine.vue';
 		return echarts.getInstanceByDom(dom) || echarts.init(dom);
 	}
 	
-	export default defineComponent({
+	defineOptions({
 		// props:['timeRange'],
 		components: {
 			timeLine

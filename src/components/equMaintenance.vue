@@ -100,8 +100,7 @@
         </div>
     </div>
 </template>
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
 import http from '@/api/http';
 
 const { SERVICE_URL_v2, DEVICESERVICE_URL } = window.APP_CONFIG;
@@ -120,7 +119,7 @@ protobuf.load("static/carTrackObj.proto", function(err, root) {
 });
 import trackPlayback from './trackPlayback.vue';
 import FlvJs from './video/FlvJs.vue'
-export default defineComponent({
+defineOptions({
 
     components: { trackPlayback, FlvJs },
     data() {

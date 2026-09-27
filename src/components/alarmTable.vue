@@ -64,8 +64,7 @@
         </div>
     </div>
 </template>
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
 import http from '@/api/http';
 
 const { SERVICE_URL, SERVICE_URL_v2 } = window.APP_CONFIG;
@@ -74,7 +73,7 @@ const assetModules = import.meta.glob('../assets/image/**/*', { eager: true, imp
 const assetUrl = (path: string): string => assetModules[path] ?? '';
 
 import FlvJs from './video/FlvJs.vue'
-export default defineComponent({
+defineOptions({
     props: ['type'],
     components: {
         FlvJs

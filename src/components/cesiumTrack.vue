@@ -9,13 +9,12 @@
         </div>
     </div>
 </template>
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
 
 const { DEVICESERVICE_URL } = window.APP_CONFIG;
 
 
-export default defineComponent({
+defineOptions({
     props: {
         track: null
     },
@@ -116,7 +115,7 @@ export default defineComponent({
                 "lat": 34.9956137,
                 "lng": 116.2135323,
                 "plateColor": 6,
-                "plateNumber": "鲁NAS121",
+                "plateNumber": "",
                 "plateType": 0,
                 "speed": 0.0,
                 "at": 0.08,
@@ -182,7 +181,7 @@ export default defineComponent({
     },
     methods: {
         initViewer() {
-            Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJmNDRmOTdiMS1mNWQ1LTQ0MTctYWRhMC0zNGZjZjk1NjgzNmQiLCJpZCI6MTAxNjYsInNjb3BlcyI6WyJhc3IiLCJnYyJdLCJpYXQiOjE1NTU4MTQ0NjN9.ejboCzDUFnHQ1Jx7EIKzw8KnxM9ZUC0-W_lcWldREOs';
+            Cesium.Ion.defaultAccessToken = window.APP_CONFIG.CESIUM_ION_TOKEN ?? '';
 
             const viewer = this.viewer = new Cesium.Viewer('cesiumMap', {
                 imageryProviderViewModels: Cesium.createDefaultImageryProviderViewModels(),

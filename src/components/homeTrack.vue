@@ -1,8 +1,7 @@
 <template>
     <div class="track-play-map-box" id="homeMap"></div>
 </template>
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
 import http from '@/api/http';
 
 const { WEBSOCKET_URL } = window.APP_CONFIG;
@@ -12,7 +11,7 @@ const assetUrl = (path: string): string => assetModules[path] ?? '';
 
 var popup = null;
 
-export default defineComponent({
+defineOptions({
 
     props: {
         options: {

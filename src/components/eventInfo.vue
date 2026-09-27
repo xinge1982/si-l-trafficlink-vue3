@@ -188,8 +188,7 @@
         </div>
     </div>
 </template>
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
 import http from '@/api/http';
 
 const { SERVICE_URL, DEVICESERVICE_URL, WEBSOCKET_URL } = window.APP_CONFIG;
@@ -211,7 +210,7 @@ protobuf.load("static/carTrackObj.proto", function(err, root) {
 
 });
 
-export default defineComponent({
+defineOptions({
     props: ['eventData', 'type', 'returnHome'],
     components: {
         FlvJs,

@@ -10,14 +10,13 @@
         <!-- <router-view/> -->
     </div>
 </template>
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
 
 const CS_WEBSOCKET_URL = window.APP_CONFIG.CS_WEBSOCKET_URL
     ?? window.APP_CONFIG.WEBSOCKET_URL.replace(/^http/, 'ws');
 
 
-export default defineComponent({
+defineOptions({
 
     components: {
 
