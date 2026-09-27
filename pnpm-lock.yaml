@@ -23,6 +23,9 @@ importers:
       element-plus:
         specifier: ^2.14.3
         version: 2.14.6(vue@3.5.43(typescript@7.0.2))
+      flv-extend:
+        specifier: ^0.3.0
+        version: 0.3.0
       jsencrypt:
         specifier: ^3.5.4
         version: 3.5.4
@@ -903,6 +906,9 @@ packages:
     peerDependenciesMeta:
       picomatch:
         optional: true
+
+  flv-extend@0.3.0:
+    resolution: {integrity: sha512-lG+tXm+NQYps80QY44F/ZxvFTprLvXeuG/d6LZbqwNliIas8OMGKqwYKnim8Exj5J3laVZ/8mFY1SDfsosqO5A==}
 
   follow-redirects@1.16.0:
     resolution: {integrity: sha512-y5rN/uOsadFT/JfYwhxRS5R7Qce+g3zG97+JrtFZlC9klX/W5hD7iiLzScI4nZqUS7DNUdhPgw4xI8W2LuXlUw==}
@@ -1959,6 +1965,10 @@ snapshots:
   fdir@6.5.0(picomatch@4.0.7):
     optionalDependencies:
       picomatch: 4.0.7
+
+  flv-extend@0.3.0:
+    dependencies:
+      mpegts.js: 1.8.2
 
   follow-redirects@1.16.0(debug@4.4.3):
     optionalDependencies:

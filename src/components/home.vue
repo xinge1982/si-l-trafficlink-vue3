@@ -47,7 +47,7 @@
                                 <div style="position: relative;">
                                     <div class="title-2">
                                         <span>{{CongestionAnalysis.title}}</span>
-                                        <img :src="require('../assets/image/screen/1920/title-2.png')" alt="">
+                                        <img :src="assetUrl('../assets/image/screen/1920/title-2.png')" alt="">
                                     </div>
                                     <div class="date-btn-box">
                                         <div @click="netWorkInfoClick()" class="network-onfo">详细</div>
@@ -59,7 +59,7 @@
                                 <div class="nav-box" v-if="CongestionAnalysis">
                                     <li v-for="item in CongestionAnalysis.lists" :class="cNav==item.id?'active':''" @click="cNav=item.id">
                                         <i>
-                                            <img :src="require('../assets/image/screen/left/1.png')" alt="">
+                                            <img :src="assetUrl('../assets/image/screen/left/1.png')" alt="">
                                         </i>
                                         <p>
                                             <b>{{item.value}}</b>
@@ -79,12 +79,12 @@
                             <div class="screen-chart" v-if="BlockAnalysis">
                                 <div class="title-2">
                                     <span>{{BlockAnalysis.title}}</span>
-                                    <img :src="require('../assets/image/screen/1920/title-2.png')" alt="">
+                                    <img :src="assetUrl('../assets/image/screen/1920/title-2.png')" alt="">
                                 </div>
                                 <div class="nav-box">
                                     <li v-for="item in BlockAnalysis.list" :class="bNav==item.id?'active':''" @click="bNav=item.id">
                                         <i>
-                                            <img :src="require('../assets/image/screen/left/2.png')" alt="">
+                                            <img :src="assetUrl('../assets/image/screen/left/2.png')" alt="">
                                         </i>
                                         <p>
                                             <b>{{item.value}}</b>
@@ -104,7 +104,7 @@
                             <div class="screen-chart" style="height: 26%; " v-if="trackAnalysis">
                                 <div class="title-2">
                                     <span>{{trackAnalysis.title}}</span>
-                                    <img :src="require('../assets/image/screen/1920/title-2.png')" alt="">
+                                    <img :src="assetUrl('../assets/image/screen/1920/title-2.png')" alt="">
                                 </div>
                                 <div class="ect">
                                     <p class="ect-title">
@@ -122,7 +122,7 @@
                                 <div style="position: relative;margin-top: 10px;">
                                     <!--  <div class="title-2" style="margin-bottom: 10px;">
                                         <span>{{HighFatSection.title}}</span>
-                                        <img :style="width<3800?'width:255px;':'width:510px;'" :src="require('../assets/image/screen/1920/title-2.png')" alt="">
+                                        <img :style="width<3800?'width:255px;':'width:510px;'" :src="assetUrl('../assets/image/screen/1920/title-2.png')" alt="">
                                     </div> -->
                                     <div class="date-btn-box">
                                         <li :class="dateType==item.value?'active':''" v-for="item in dateTypes" @click="dateType=item.value">
@@ -158,7 +158,7 @@
                                     <p style="display: flex;" :class="webType=='cross'?'p1':'p2'">
                                         <span v-for="item in rankTypes[webType]" :class="item.value==rankType&&webType=='cross'?item.class+' btnActive':item.class" @click="rankType=item.value">{{item.name}}</span>
                                     </p>
-                                    <img :src="require('../assets/image/screen/1920/title-2.png')" alt="" :style="width<3800&&webType=='cross'?'width:215px;':width>3799&&webType=='cross'?'width:430px;':width<3800?'width:430px;':''" style="margin-left: 0;">
+                                    <img :src="assetUrl('../assets/image/screen/1920/title-2.png')" alt="" :style="width<3800&&webType=='cross'?'width:215px;':width>3799&&webType=='cross'?'width:430px;':width<3800?'width:430px;':''" style="margin-left: 0;">
                                 </div>
                                 <div class="rank-list">
                                     <ul class="rank-list-th">
@@ -169,8 +169,8 @@
                                         <ul v-for="(item,index) in crossList.data" @click="crossClick(item)" :class="crossData&&item.crossId==crossData.crossId?'active':''">
                                             <li v-for="t in crossList.title" :style="t.label=='排行'?'flex:0.5;':t.label=='名称'?'flex:3;':''">
                                                 <span>{{item[t['prop']]}}</span>
-                                                <img :src="item.upDown==1?require('../assets/image/screen/up.png'):require('../assets/image/screen/down.png')" alt="" v-show="width<=3800&&t.prop=='idxRate'">
-                                                <img :src="item.upDown==1?require('../assets/image/screen/up-4k.png'):require('../assets/image/screen/down-4k.png')" alt="" v-show="width>3800&&t.prop=='idxRate'">
+                                                <img :src="item.upDown==1?assetUrl('../assets/image/screen/up.png'):assetUrl('../assets/image/screen/down.png')" alt="" v-show="width<=3800&&t.prop=='idxRate'">
+                                                <img :src="item.upDown==1?assetUrl('../assets/image/screen/up-4k.png'):assetUrl('../assets/image/screen/down-4k.png')" alt="" v-show="width>3800&&t.prop=='idxRate'">
                                             </li>
                                         </ul>
                                     </div>
@@ -178,8 +178,8 @@
                                         <ul v-for="(item,index) in roadList.data" @click="roadClick(item)" :class="crossData&&item.roadId==crossData.roadId?'active':''">
                                             <li v-for="t in roadList.title" :style="t.label=='排行'?'flex:0.5;':t.label=='名称'?'flex:3;':''">
                                                 <span>{{item[t['prop']]}}</span>
-                                                <img :src="item.upDown==1?require('../assets/image/screen/up.png'):require('../assets/image/screen/down.png')" alt="" v-show="width<=3800&&t.prop=='idxRate'">
-                                                <img :src="item.upDown==1?require('../assets/image/screen/up-4k.png'):require('../assets/image/screen/down-4k.png')" alt="" v-show="width>3800&&t.prop=='idxRate'">
+                                                <img :src="item.upDown==1?assetUrl('../assets/image/screen/up.png'):assetUrl('../assets/image/screen/down.png')" alt="" v-show="width<=3800&&t.prop=='idxRate'">
+                                                <img :src="item.upDown==1?assetUrl('../assets/image/screen/up-4k.png'):assetUrl('../assets/image/screen/down-4k.png')" alt="" v-show="width>3800&&t.prop=='idxRate'">
                                             </li>
                                         </ul>
                                     </div>
@@ -283,7 +283,7 @@
                                 <li v-for="item in indexTypes" :class="index==item.value?'active':''" @click="index=item.value">{{item.label}}</li>
                             </div>
                             
-                            <!-- <img :src="require('../assets/image/screen/1920/title-2.png')" alt=""> -->
+                            <!-- <img :src="assetUrl('../assets/image/screen/1920/title-2.png')" alt=""> -->
                         </div>
                         <!-- <div class="border"></div> -->
                         <div class="index-ect">
@@ -341,7 +341,7 @@
                         </div>
                         <div class="title-2">
                             <span>{{EventRatio.title}}</span>
-                            <img :src="require('../assets/image/screen/1920/title-2.png')" alt="" :style="width<3800?'width: 260px;':'width:502px;'">
+                            <img :src="assetUrl('../assets/image/screen/1920/title-2.png')" alt="" :style="width<3800?'width: 260px;':'width:502px;'">
                         </div>
                         <div style="width: 100%;flex:1;">
                             <div style="height: 100%;float: left;width:30%;" id="sjlxEct"></div>
@@ -370,7 +370,7 @@
                               </div>
                               <div class="waring-class-box">
                                 <li v-for="item in EventStateCountList">
-                                  <img :src="require('../assets/image/screen/1920/waring-'+item.value+'.png')" alt="">
+                                  <img :src="assetUrl('../assets/image/screen/1920/waring-'+item.value+'.png')" alt="">
                                   <span :style="item.value==1?'color:#19BCF1;':item.value==2?'color:#F7C73B;':'color:#FA5646;'">{{item.name.substr(0,item.name.length-1)}}</span>
                                 </li>
                               </div>
@@ -398,7 +398,7 @@
                             <div class="list-tr-box" v-anyNameYouLike>
                                 <ul class="list-tr" v-for="(item,index) in EventRealList" @click="eventClick(item,index)" :style="eventId==item.id?'color:#1378E0;':''">
                                     <li style="flex:4;">
-                                        <img :src="require('../assets/image/screen/w'+item.eventState+'.png')" alt="">
+                                        <img :src="assetUrl('../assets/image/screen/w'+item.eventState+'.png')" alt="">
                                         <span>{{item.typeCodeName}}</span>
                                     </li>
                                     <li style="flex:4;" :title="item.crossName">{{item.crossName}}</li>
@@ -420,7 +420,7 @@
                                 </div>
                                 <div class="waring-class-box" style="margin-bottom: 0;">
                                     <li style="cursor: pointer;" @click="alarmTableType='fireAlarm'">
-                                        <img :src="require('../assets/image/screen/1920/fire.png')" alt="" style="width: 60px;height: 42px;">
+                                        <img :src="assetUrl('../assets/image/screen/1920/fire.png')" alt="" style="width: 60px;height: 42px;">
                                         <span v-if="fireEventList" style="line-height: 42px;">{{fireEventList.data.length}}</span>
                                     </li>
                                 </div>
@@ -445,7 +445,7 @@
                                 </div>
                                 <div class="waring-class-box" style="margin-bottom: 0;">
                                     <li style="cursor: pointer;" @click="alarmTableType='facilityAlarm'">
-                                        <img :src="require('../assets/image/screen/1920/dev.png')" alt="" style="width: 60px;height: 42px;">
+                                        <img :src="assetUrl('../assets/image/screen/1920/dev.png')" alt="" style="width: 60px;height: 42px;">
                                         <span v-if="facilityList" style="line-height: 42px;">{{facilityList.data.length}}</span>
                                     </li>
                                 </div>
@@ -469,19 +469,10 @@
         </div>
     </div>
 </template>
-<script>
+<script setup lang="ts">
 import protobuf from "protobufjs";
-var AwesomeMessage, map, marker, popupArr = [],
-    player, playerArr = [],
-    cameraLabel = null,
-    alarmPopup = null;
-protobuf.load("static/carTrackObj.proto", function(err, root) {
-    if (err)
-        throw err;
-
-    AwesomeMessage = root.lookupType("crossserverpb.CarTrack");
-
-});
+import http from '@/api/http';
+import { assetUrl } from '@/tool/assetUrl';
 import homeTrack from './homeTrack.vue';
 import cesiumTrack from './cesiumTrack.vue';
 import crossBox from './cross.vue';
@@ -498,26 +489,39 @@ import FlvExtend from 'flv-extend'
 import config from '../../package.json'
 import eventInfo from './eventInfo.vue';
 
-let sharedAudioContext = null;
-const alarmAudioBufferCache = {};
+defineOptions((() => {
+    var AwesomeMessage, map, marker, popupArr = [],
+        player, playerArr = [],
+        cameraLabel = null,
+        alarmPopup = null;
 
-function getSharedAudioContext() {
-    if (sharedAudioContext) {
+    protobuf.load("static/carTrackObj.proto", function(err, root) {
+        if (err) {
+            throw err;
+        }
+        AwesomeMessage = root.lookupType("crossserverpb.CarTrack");
+    });
+
+    let sharedAudioContext = null;
+    const alarmAudioBufferCache = {};
+
+    function getSharedAudioContext() {
+        if (sharedAudioContext) {
+            return sharedAudioContext;
+        }
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContextClass) {
+            return null;
+        }
+        sharedAudioContext = new AudioContextClass();
         return sharedAudioContext;
     }
-    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-    if (!AudioContextClass) {
-        return null;
-    }
-    sharedAudioContext = new AudioContextClass();
-    return sharedAudioContext;
-}
 
-export default {
+    return {
     components: { homeTrack,cesiumTrack, crossBox, roadAnalyse, alarmTable, infoPublish, trafficEvent, globalConfig, vehicleQuery, netWorkInfo, FlvJs, eventInfo },
     data() {
         return {
-            title: WEB_TITLE_V2,
+            title: window.APP_CONFIG.WEB_TITLE_V2,
             isRouterShow: true,
             options: {
                 tracks: null,
@@ -528,14 +532,14 @@ export default {
             trackPlay: true,
             trackPath: false,
             areaData: {
-                centerX: MAP_CENTER[0],
-                centerY: MAP_CENTER[1],
+                centerX: window.APP_CONFIG.MAP_CENTER[0],
+                centerY: window.APP_CONFIG.MAP_CENTER[1],
             },
             time: '',
             date: '',
             week: '',
-            webType: WEB_TYPE,
-            rankType: WEB_TYPE,
+            webType: window.APP_CONFIG.WEB_TYPE,
+            rankType: window.APP_CONFIG.WEB_TYPE,
             trafficAnalysis: '',
             RoadNetworkOverview: [],
             onDuty: '',
@@ -582,68 +586,68 @@ export default {
                 name: '实时轨迹',
                 value: 1,
                 show: true,
-                icon: require('../assets/image/screen/1920/ssgj.png'),
-                activeIcon: require('../assets/image/screen/1920/ssgj-a.png')
+                icon: assetUrl('../assets/image/screen/1920/ssgj.png'),
+                activeIcon: assetUrl('../assets/image/screen/1920/ssgj-a.png')
             }, {
                 name: '历史轨迹',
                 value: 2,
                 show: true,
-                icon: require('../assets/image/screen/1920/lsgj.png'),
-                activeIcon: require('../assets/image/screen/1920/lsgj-a.png')
+                icon: assetUrl('../assets/image/screen/1920/lsgj.png'),
+                activeIcon: assetUrl('../assets/image/screen/1920/lsgj-a.png')
             }, {
                 name: '停止轨迹',
                 value: 3,
                 show: true,
-                icon: require('../assets/image/screen/1920/tzgj.png'),
-                activeIcon: require('../assets/image/screen/1920/tzgj-a.png')
+                icon: assetUrl('../assets/image/screen/1920/tzgj.png'),
+                activeIcon: assetUrl('../assets/image/screen/1920/tzgj-a.png')
             }, {
                 name: '车辆轨迹',
                 value: 4,
                 show: true,
-                icon: require('../assets/image/screen/1920/clgj.png'),
-                activeIcon: require('../assets/image/screen/1920/clgj-a.png')
+                icon: assetUrl('../assets/image/screen/1920/clgj.png'),
+                activeIcon: assetUrl('../assets/image/screen/1920/clgj-a.png')
             }, {
                 name: '三维地图',
                 value: 6,
                 show: threeMap,
-                icon: require('../assets/image/screen/1920/3d.png'),
-                activeIcon: require('../assets/image/screen/1920/3d-a.png')
+                icon: assetUrl('../assets/image/screen/1920/3d.png'),
+                activeIcon: assetUrl('../assets/image/screen/1920/3d-a.png')
             }, {
                 name: '地图全屏',
                 value: 7,
                 show: true,
-                icon: require('../assets/image/screen/1920/qp.png'),
-                activeIcon: require('../assets/image/screen/1920/qp-a.png')
+                icon: assetUrl('../assets/image/screen/1920/qp.png'),
+                activeIcon: assetUrl('../assets/image/screen/1920/qp-a.png')
             }, {
                 name: '紧急报警',
                 value: 8,
-                show: WEB_TYPE == 'highway' ? true : false,
-                icon: require('../assets/image/screen/1920/jjbj.png'),
-                activeIcon: require('../assets/image/screen/1920/jjbj-a.png')
+                show: window.APP_CONFIG.WEB_TYPE == 'highway' ? true : false,
+                icon: assetUrl('../assets/image/screen/1920/jjbj.png'),
+                activeIcon: assetUrl('../assets/image/screen/1920/jjbj-a.png')
             }, {
                 name: '车辆信息',
                 value: 9,
                 show: true,
-                icon: require('../assets/image/screen/1920/clxx.png'),
-                activeIcon: require('../assets/image/screen/1920/clxx-a.png')
+                icon: assetUrl('../assets/image/screen/1920/clxx.png'),
+                activeIcon: assetUrl('../assets/image/screen/1920/clxx-a.png')
             }, {
                 name: '设备图层',
                 value: 10,
                 show: true,
-                icon: require('../assets/image/screen/1920/sbtc.png'),
-                activeIcon: require('../assets/image/screen/1920/sbtc-a.png')
+                icon: assetUrl('../assets/image/screen/1920/sbtc.png'),
+                activeIcon: assetUrl('../assets/image/screen/1920/sbtc-a.png')
             }, {
                 name: '全息路况',
                 value: 11,
                 show: traffic,
-                icon: require('../assets/image/screen/1920/lk.png'),
-                activeIcon: require('../assets/image/screen/1920/lk-a.png')
+                icon: assetUrl('../assets/image/screen/1920/lk.png'),
+                activeIcon: assetUrl('../assets/image/screen/1920/lk-a.png')
             }, {
                 name: '车辆查询',
                 value: 12,
                 show: true,
-                icon: require('../assets/image/screen/1920/clcx.png'),
-                activeIcon: require('../assets/image/screen/1920/clcx-a.png')
+                icon: assetUrl('../assets/image/screen/1920/clcx.png'),
+                activeIcon: assetUrl('../assets/image/screen/1920/clcx-a.png')
             }],
 
             toolActive: 1,
@@ -700,7 +704,7 @@ export default {
             pause: true,
             person: 3,
             tracking: { id: '', person: 3 },
-            videoUrl: SERVICE_URL + 'video/demo.mp4',
+            videoUrl: window.APP_CONFIG.SERVICE_URL + 'video/demo.mp4',
             location: '',
             eventId: null,
             tracksTime: '',
@@ -734,7 +738,7 @@ export default {
             },
             username: sessionStorage.getItem('username'),
             videoUrlList: [],
-            SERVICE_URL: SERVICE_URL,
+            SERVICE_URL: window.APP_CONFIG.SERVICE_URL,
             weatherList: [],
             weatherId: null,
             weatherPage: 1,
@@ -888,7 +892,7 @@ export default {
         window.addEventListener('beforeunload', this.beforeUnloadHandler);
 
     },
-    beforeDestroy() {
+    beforeUnmount() {
 
         this.unbindHomeMapEvents()
         this.unbindChartResizeHandler()
@@ -902,7 +906,7 @@ export default {
             this.beforeUnloadHandler = null;
         }
     },
-    destroyed() {
+    unmounted() {
 
         this.routerFlag = true;
         this.unbindHomeMapEvents()
@@ -1137,7 +1141,7 @@ export default {
 
             }
 
-            this.axios.get(SERVICE_URL + 'cameraVideo/getRealDirList?', { params: param }).then((data) => {
+            http.get(window.APP_CONFIG.SERVICE_URL + 'cameraVideo/getRealDirList?', { params: param }).then((data) => {
 
                 this.dirList = data.data.data;
                 this.dirList.forEach(item => {
@@ -1170,7 +1174,7 @@ export default {
 
             console.log('cross video play ' + operation + " " + param)
 
-            this.axios.get(SERVICE_URL + 'VCN/playVideo?', { params: param }).then((data) => {
+            http.get(window.APP_CONFIG.SERVICE_URL + 'VCN/playVideo?', { params: param }).then((data) => {
 
                 if (this.address.length > 0) {
                     this.videoRid = this.address[1].split(',')[0];
@@ -1260,7 +1264,7 @@ export default {
                 this.$store.commit('del_token');
                 this.$router.push('/login');
                 sessionStorage.clear();
-                // this.axios.delete(LOGO_SERVICE + 'mapabc-admin-system/api/v1/exit?', {
+                // http.delete(window.APP_CONFIG.LOGO_SERVICE + 'mapabc-admin-system/api/v1/exit?', {
                 // }).then(res => {
                 //     this.$store.commit('del_token')
                 //     this.$router.push('/login')
@@ -1386,7 +1390,7 @@ export default {
                 id: item.id
             };
 
-            this.axios.get(SERVICE_URL_v2 + '/getEventInfoById?', { params: param }).then((data) => {
+            http.get(window.APP_CONFIG.SERVICE_URL_v2 + '/getEventInfoById?', { params: param }).then((data) => {
                 var res = data.data.data;
                 this.$refs.playBack.homeMap.flyTo({ center: [res.centerX, res.centerY], zoom: 18 })
 
@@ -1513,7 +1517,7 @@ export default {
 
             };
 
-            this.axios.get(LOGO_SERVICE + 'mapabc-admin-system/api/v1/menus/build/module?moduleName=' + moduleName, { params: param }).then((data) => {
+            http.get(window.APP_CONFIG.LOGO_SERVICE + 'mapabc-admin-system/api/v1/menus/build/module?moduleName=' + moduleName, { params: param }).then((data) => {
                 var res = this.crossInfoNavMenu = data.data[0].children;
                 var re = /.*[\u4e00-\u9fa5]+.*$/;
                 var language = navigator.language; //获取浏览器语言
@@ -1540,9 +1544,9 @@ export default {
                 bound: this.bounds
 
             };
-            this.axios.post(WEBSOCKET_URL + 'consul/api/request?', param).then((data) => {
+            http.post(window.APP_CONFIG.WEBSOCKET_URL + 'consul/api/request?', param).then((data) => {
                 if (data.data.statusCode == 200) {
-                    this.URL = data.data.path ? WEBSOCKET_URL + data.data.path : data.data.url;
+                    this.URL = data.data.path ? window.APP_CONFIG.WEBSOCKET_URL + data.data.path : data.data.url;
                     this.getwebsocketData()
                     this.getStopline(state)
 
@@ -1571,7 +1575,7 @@ export default {
                 bound: this.bounds._sw.lng + ',' + this.bounds._sw.lat + ';' + this.bounds._ne.lng + ',' + this.bounds._ne.lat
 
             };
-            this.axios.get(this.URL + 'region/api/getStopline?', {
+            http.get(this.URL + 'region/api/getStopline?', {
                 params: param
             }).then((data) => {
                 this.options.geojson = data.data;
@@ -1602,7 +1606,7 @@ export default {
                 dir: 8
             };
 
-            this.axios.get(this.URL + 'cross/api/getCrossGraphInfo?', { params: param }).then((data) => {
+            http.get(this.URL + 'cross/api/getCrossGraphInfo?', { params: param }).then((data) => {
 
                 const res = data.data;
                 this.dirs = res.total;
@@ -1942,7 +1946,7 @@ export default {
 
             this.closeEvtWebsocket()
             if ('WebSocket' in window) {
-                var url = SERVICE_URL.indexOf('https') != -1 ? SERVICE_URL.replace(/https/, 'wss') : SERVICE_URL.replace(/http/, 'ws');
+                var url = window.APP_CONFIG.SERVICE_URL.indexOf('https') != -1 ? window.APP_CONFIG.SERVICE_URL.replace(/https/, 'wss') : window.APP_CONFIG.SERVICE_URL.replace(/http/, 'ws');
 
                 this.evtWebsocket = new WebSocket(url + "websocket/event/" + sessionStorage.getItem('userid'));
             } else {
@@ -1963,7 +1967,7 @@ export default {
                     _this.openAlarmSound('/video/' + item.typeCode + '.mp3')
                     if (_this.checktoolActive.indexOf(6) > -1) {
                         _this.removeFire()
-                        _this.$refs.cross3d.addFire(item, require('../assets/image/fire.png'));
+                        _this.$refs.cross3d.addFire(item, assetUrl('../assets/image/fire.png'));
 
 
                     } else {
@@ -1991,12 +1995,12 @@ export default {
                 id: id
             };
 
-            this.axios.get(SERVICE_URL_v2 + '/alarm/getFireInfoById?', { params: param }).then((data) => {
+            http.get(window.APP_CONFIG.SERVICE_URL_v2 + '/alarm/getFireInfoById?', { params: param }).then((data) => {
                 var item = data.data.data;
                 item.thermalCamera = false;
                 if (_this.checktoolActive.indexOf(6) > -1) {
                     _this.removeFire()
-                    _this.$refs.cross3d.addFire(item, require('../assets/image/fire.png'));
+                    _this.$refs.cross3d.addFire(item, assetUrl('../assets/image/fire.png'));
                 } else {
                     _this.addfirePoint(item);
                 }
@@ -2123,7 +2127,7 @@ export default {
                 operation: operation
 
             }
-            this.axios.get(SERVICE_URL + 'VCN/playVideo?', { params: param }).then((data) => {
+            http.get(window.APP_CONFIG.SERVICE_URL + 'VCN/playVideo?', { params: param }).then((data) => {
                 this.alarmVideoRid = item.rid;
                 this.alarmVideoId = cameraCode;
                 if (operation == 0) {
@@ -2226,7 +2230,7 @@ export default {
 
             };
 
-            this.axios.get(SERVICE_URL_v2 + '/getCrossLocation?', { params: param }).then((data) => {
+            http.get(window.APP_CONFIG.SERVICE_URL_v2 + '/getCrossLocation?', { params: param }).then((data) => {
 
                 var map = this.$refs.playBack.homeMap;
                 var res = data.data.data;
@@ -2375,7 +2379,7 @@ export default {
                 id: id
             };
 
-            this.axios.get(SERVICE_URL_v2 + '/getCongestionAnalysis?', { params: param }).then((data) => {
+            http.get(window.APP_CONFIG.SERVICE_URL_v2 + '/getCongestionAnalysis?', { params: param }).then((data) => {
                 var res = this.CongestionAnalysis = data.data.data;
                 this.cNav = res.lists[0].id;
 
@@ -2447,7 +2451,7 @@ export default {
                 id: id
             };
 
-            this.axios.get(SERVICE_URL_v2 + '/getDelayAnalysis?', { params: param }).then((data) => {
+            http.get(window.APP_CONFIG.SERVICE_URL_v2 + '/getDelayAnalysis?', { params: param }).then((data) => {
                 var res = this.BlockAnalysis = data.data.data;
                 this.bNav = res.list[0].id;
                 res.echartsVoMap[this.bNav].series.forEach(item => {
@@ -2513,7 +2517,7 @@ export default {
                 id: this.crossData ? this.crossData.crossId : ''
             };
 
-            this.axios.get(SERVICE_URL_v2 + '/getTrackAnalysis?', { params: param }).then((data) => {
+            http.get(window.APP_CONFIG.SERVICE_URL_v2 + '/getTrackAnalysis?', { params: param }).then((data) => {
                 this.trackAnalysis = data.data.data;
                 var barres = data.data.data.echartsVo;
                 barres.series.forEach(item => {
@@ -2579,7 +2583,7 @@ export default {
                 type: this.dateType
             };
 
-            this.axios.get(SERVICE_URL_v2 + '/getHighPointSection?', { params: param }).then((data) => {
+            http.get(window.APP_CONFIG.SERVICE_URL_v2 + '/getHighPointSection?', { params: param }).then((data) => {
                 var totalSumAll = 0;
                 data.data.data.echartsVo.series[0].data.forEach(item => {
                     totalSumAll += Number(item.value)
@@ -2633,7 +2637,7 @@ export default {
                 type: this.day
             };
 
-            this.axios.get(SERVICE_URL_v2 + '/getCrossTop10?', { params: param }).then((data) => {
+            http.get(window.APP_CONFIG.SERVICE_URL_v2 + '/getCrossTop10?', { params: param }).then((data) => {
 
                 this.crossList = data.data.data;
                 this.videoCrossData = data.data.data.data[0]
@@ -2649,7 +2653,7 @@ export default {
                 type: this.day
             };
 
-            this.axios.get(SERVICE_URL_v2 + '/getRoadTop10?', { params: param }).then((data) => {
+            http.get(window.APP_CONFIG.SERVICE_URL_v2 + '/getRoadTop10?', { params: param }).then((data) => {
 
                 this.roadList = data.data.data;
 
@@ -2663,13 +2667,13 @@ export default {
                 id: this.crossData ? this.crossData.crossId : ''
             };
 
-            this.axios.get(SERVICE_URL_v2 + '/getRoadNetworkOverview?', { params: param }).then((data) => {
+            http.get(window.APP_CONFIG.SERVICE_URL_v2 + '/getRoadNetworkOverview?', { params: param }).then((data) => {
                 var res = this.RoadNetworkOverview = data.data.data.valueVoList;
 
                 var length
                 res.forEach(item => {
 
-                    item.icon = require('../assets/image/screen/center/' + item.icon + '.png')
+                    item.icon = assetUrl('../assets/image/screen/center/' + item.icon + '.png')
                     if (item.name.indexOf('事件') > -1) {
 
                         length = Number(item.value)
@@ -2715,11 +2719,11 @@ export default {
 
             };
 
-            this.axios.get(SERVICE_URL_v2 + '/getStatsList?', { params: param }).then((data) => {
+            http.get(window.APP_CONFIG.SERVICE_URL_v2 + '/getStatsList?', { params: param }).then((data) => {
                 var res = this.crossStatusList = data.data.data;
 
                 res.forEach(item => {
-                    item.icon = require('../assets/image/screen/center/' + item.icon + '.png')
+                    item.icon = assetUrl('../assets/image/screen/center/' + item.icon + '.png')
 
                 })
             })
@@ -2735,7 +2739,7 @@ export default {
                 id: item.id
             };
 
-            this.axios.get(SERVICE_URL_v2 + '/getStatsTop?', { params: param }).then((data) => {
+            http.get(window.APP_CONFIG.SERVICE_URL_v2 + '/getStatsTop?', { params: param }).then((data) => {
                 var res = data.data.data,
                     xys = [],
                     features = [];
@@ -2784,7 +2788,7 @@ export default {
 
             };
 
-            this.axios.get(SERVICE_URL_v2 + '/getCameraList?', { params: param }).then((data) => {
+            http.get(window.APP_CONFIG.SERVICE_URL_v2 + '/getCameraList?', { params: param }).then((data) => {
                 var res = data.data.data;
                 var features = [];
                 var map = this.$refs.playBack.homeMap;
@@ -2858,7 +2862,7 @@ export default {
 
         //     };
 
-        //     this.axios.get(SERVICE_URL + 'condition/getRealRoadCondition?', { params: param }).then((data) => {
+        //     http.get(window.APP_CONFIG.SERVICE_URL + 'condition/getRealRoadCondition?', { params: param }).then((data) => {
 
         //         var res = data.data.data;
         //         this.mapUtils.addgeojsonLine({
@@ -2918,7 +2922,7 @@ export default {
 
             const map = this.$refs.playBack.homeMap;
 
-            this.axios.get(SERVICE_URL + 'external/getConstantRoad?', { params: param }).then((data) => {
+            http.get(window.APP_CONFIG.SERVICE_URL + 'external/getConstantRoad?', { params: param }).then((data) => {
                 if (traffic) {
                     const features = data.data.data.features
 
@@ -2951,7 +2955,7 @@ export default {
                 time: this.mapUtils.getDateYMD('ymdhms')
             };
 
-            this.axios.get(SERVICE_URL + 'external/getStateList2?', { params: param }).then((data) => {
+            http.get(window.APP_CONFIG.SERVICE_URL + 'external/getStateList2?', { params: param }).then((data) => {
                 var res = data.data.data;
                 var data = map.getSource('si-trafficLayer')._data;
                 data.features.forEach((item, i) => {
@@ -3028,7 +3032,7 @@ export default {
                 param.demo = 0;
             }
 
-            this.axios.get(SERVICE_URL + 'VCN/playVideo?', { params: param }).then((data) => {
+            http.get(window.APP_CONFIG.SERVICE_URL + 'VCN/playVideo?', { params: param }).then((data) => {
                 if (data.data.code == -1) {
                     this.$message({
                         showClose: true,
@@ -3216,7 +3220,7 @@ export default {
                 pageSize: this.weatherPageSize
             };
 
-            this.axios.get(SERVICE_URL_v2 + '/getWeather?', { params: param }).then((data) => {
+            http.get(window.APP_CONFIG.SERVICE_URL_v2 + '/getWeather?', { params: param }).then((data) => {
 
                 var res = this.weatherList = data.data.data.resultList;
                 this.weatherTotal = data.data.data.totalNum;
@@ -3224,7 +3228,7 @@ export default {
                     map = this.$refs.playBack.homeMap;
                 res.forEach(item => {
                     try {
-                        var url = require('../assets/image/screen/weather/' + item.weatherCode + '.png');
+                        var url = assetUrl('../assets/image/screen/weather/' + item.weatherCode + '.png');
 
                         item.icon = url;
 
@@ -3300,7 +3304,7 @@ export default {
                 dateType: this.threeDateType
             };
 
-            this.axios.get(SERVICE_URL_v2 + '/getThreeQuickSpeed?', { params: param }).then((data) => {
+            http.get(window.APP_CONFIG.SERVICE_URL_v2 + '/getThreeQuickSpeed?', { params: param }).then((data) => {
 
                 var res = this.ThreeQuickSpeedList = data.data.data.resultList;
                 this.threeQuickSpeedTotal = data.data.data.totalNum;
@@ -3391,7 +3395,7 @@ export default {
 
             };
 
-            this.axios.get(SERVICE_URL_v2 + '/getEventRatio?', { params: param }).then((data) => {
+            http.get(window.APP_CONFIG.SERVICE_URL_v2 + '/getEventRatio?', { params: param }).then((data) => {
                 var totalSumAll = 0;
                 data.data.data.echartsVo.series[0].data.forEach(item => {
                     totalSumAll += Number(item.value)
@@ -3444,7 +3448,7 @@ export default {
 
             }
 
-            this.axios.get(SERVICE_URL_v2 + '/getEventOrderType?', { params: param }).then((data) => {
+            http.get(window.APP_CONFIG.SERVICE_URL_v2 + '/getEventOrderType?', { params: param }).then((data) => {
 
                 this.evtOrderType = data.data.data;
                 this.evtOrder = data.data.data[0].value;
@@ -3464,7 +3468,7 @@ export default {
 
             }
 
-            this.axios.get(SERVICE_URL_v2 + '/getEventList?', { params: param }).then((data) => {
+            http.get(window.APP_CONFIG.SERVICE_URL_v2 + '/getEventList?', { params: param }).then((data) => {
                 this.eventId = null;
                 this.autoRefresh = false;
                 // if (this.video) {
@@ -3517,7 +3521,7 @@ export default {
         //     }
 
         //     this.$nextTick(() => {
-        //         this.video.src = SERVICE_URL + this.EventRealList[this.ecurr].videoUrl[this.curr];
+        //         this.video.src = window.APP_CONFIG.SERVICE_URL + this.EventRealList[this.ecurr].videoUrl[this.curr];
 
         //         setTimeout(() => {
         //             this.video.load();
@@ -3564,7 +3568,7 @@ export default {
         getEventStateCount() {
             var _this = this;
             var param = {}
-            this.axios.get(SERVICE_URL_v2 + '/getEventStateCount?', { params: param }).then((data) => {
+            http.get(window.APP_CONFIG.SERVICE_URL_v2 + '/getEventStateCount?', { params: param }).then((data) => {
                 this.EventStateCountList = data.data.data.reverse();
             })
 
@@ -3577,7 +3581,7 @@ export default {
                 crossId: ''
             }
 
-            this.axios.get(SERVICE_URL_v2 + '/getRealAlarmCount?', { params: param }).then((data) => {
+            http.get(window.APP_CONFIG.SERVICE_URL_v2 + '/getRealAlarmCount?', { params: param }).then((data) => {
                 this.realAlarmCount = data.data.data;
 
             })
@@ -3590,7 +3594,7 @@ export default {
                 crossId: ''
             }
 
-            this.axios.get(SERVICE_URL_v2 + '/getRealHtoMap?', { params: param }).then((data) => {
+            http.get(window.APP_CONFIG.SERVICE_URL_v2 + '/getRealHtoMap?', { params: param }).then((data) => {
                 var item = data.data.data;
                 var dom = 'alarmEct';
                 var hours = item.value.hours;
@@ -3623,7 +3627,8 @@ export default {
 
     }
 
-}
+    }
+})())
 </script>
 <style lang="scss">
 @media screen and (max-width:3800px) {
