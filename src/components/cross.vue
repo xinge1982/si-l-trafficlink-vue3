@@ -159,7 +159,6 @@ async function getModule(): Promise<void> {
 
     window.APP_CONFIG.nextRoute = [
       'home',
-      'homeScreen',
       ...crossInfoNavMenu.value.map((item) => item.component),
     ]
   } catch (error) {

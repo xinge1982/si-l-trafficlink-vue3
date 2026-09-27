@@ -1528,7 +1528,7 @@ defineOptions((() => {
                 } else {
                     var arr = res.filter(item => !re.test(item.name));
                 }
-                nextRoute = ['home','homeScreen']
+                nextRoute = ['home']
                 arr.forEach(item => {
                     var param = item.params ? item.params : ''
                     nextRoute.push(item.component)

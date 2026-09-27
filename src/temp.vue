@@ -1,7 +1,7 @@
 <template>
   <div class="track-play-map-box" id="roadMap"></div>
 </template>
-<script lang="ts">
+<script setup lang="ts">
 import {
   ref,
   shallowRef,
