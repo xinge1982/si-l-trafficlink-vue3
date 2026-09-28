@@ -4,7 +4,7 @@
             <div style="flex:1;padding: 30px 40px;display: flex;flex-direction: column;">
                 <div class="event-title">
                     <span>车辆画像</span>
-                    <i class="el-icon-close" @click="$parent.isvehiclePort = false"></i>
+                    <el-icon @click="$parent.isvehiclePort = false"><Close /></el-icon>
                 </div>
                 <div class="ect-select-box">
                     <div class="ect-select">
@@ -94,6 +94,7 @@
     </div>
 </template>
 <script setup lang="ts">
+import { Close } from '@element-plus/icons-vue';
 import http from '@/api/http';
 import protobuf from "protobufjs";
 

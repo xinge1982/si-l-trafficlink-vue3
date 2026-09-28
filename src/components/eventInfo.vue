@@ -4,7 +4,7 @@
             <div class="event-box-title">
                 <span>交通事件监测</span>
                 <b>{{eventData.crossName||eventInfo.location}}</b>
-                <i class="el-icon-close" style="float: right;cursor: pointer;font-size: 18px;" @click="closeEvent()"></i>
+                <el-icon style="float: right;cursor: pointer;font-size: 18px;" @click="closeEvent()"><Close /></el-icon>
             </div>
             <div class="event-info-box">
                 <div class="event-left-box">
@@ -97,7 +97,7 @@
                                 <video class="video box" v-if="videoState==1" :src="address1" controls="controls" loop="loop" style="width:100%;height: 100%;" id="J_video"></video>
                                 <li v-if="videoState==2" style="text-align: center;margin:20px auto;">
                                     <span>{{$t("home.Video-generation")}}</span>
-                                    <i class="el-icon-loading"></i>
+                                    <el-icon class="is-loading"><Loading /></el-icon>
                                 </li>
                             </div>
                             <div v-if="cameraState!==1">
@@ -171,7 +171,7 @@
         </div>
         <div v-show="DialogVisible" style="position: absolute;background: rgba(0,0,0,0.8);z-index: 999;top: 30px;bottom: 30px;left:30px;right: 30px;">
             <div class="event-box-title">
-                <i class="el-icon-close" style="float: right;cursor: pointer;font-size: 18px;" @click="DialogVisible=false"></i>
+                <el-icon style="float: right;cursor: pointer;font-size: 18px;" @click="DialogVisible=false"><Close /></el-icon>
             </div>
             <el-carousel :interval="5000" height="650px">
                 <el-carousel-item v-for="item in imgs" :key="item">
@@ -189,6 +189,7 @@
     </div>
 </template>
 <script setup lang="ts">
+import { Close, Loading } from '@element-plus/icons-vue';
 import http from '@/api/http';
 import FlvJs from './video/FlvJs.vue'
 import trackPlayback from './trackPlayback.vue';

@@ -9,12 +9,12 @@
 			<div class="chart-content-box">
 				<h3 style="background: rgba(42,52,56,.8);padding: 0 10px;display: inline-block;margin-left: 10px;">
 					<span>{{$t("home.schemeComparison")}}</span>
-					<i :class="play?'el-icon-video-pause':'el-icon-video-play'" style="margin-left: 20px;cursor: pointer;" @click="play=!play,playPlan()"></i>
+					<el-icon style="margin-left: 20px;cursor: pointer;" @click="play=!play,playPlan()"><VideoPause v-if="play" /><VideoPlay v-else /></el-icon>
 				</h3>
 				<div style="font-size: 14px;font-weight: 700;padding: 10px 0;margin-left: 10px;">
-					<i class="el-icon-arrow-left" style="font-size: 16px;font-weight: 700;"></i>
+					<el-icon style="font-size: 16px;font-weight: 700;"><ArrowLeft /></el-icon>
 					<span>{{time}}</span>
-					<i class="el-icon-arrow-right" style="font-size: 16px;font-weight: 700;"></i>
+					<el-icon style="font-size: 16px;font-weight: 700;"><ArrowRight /></el-icon>
 				</div>
 				
 				<div class="signal-state-ect-box">
@@ -58,6 +58,7 @@
 </template>
 
 <script setup lang="ts">
+import { ArrowLeft, ArrowRight, VideoPause, VideoPlay } from '@element-plus/icons-vue';
 import http from '@/api/http';
 import timeLine from './timeLine.vue';
 

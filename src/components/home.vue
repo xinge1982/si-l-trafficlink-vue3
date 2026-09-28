@@ -11,13 +11,13 @@
                 </div>
                 <div class="date-time-box user-box">
                     <li>
-                        <i class="el-icon-user"></i>
+                        <el-icon><User /></el-icon>
                         <span>{{username}}</span>
                     </li>
                     <li>/</li>
                     <li style="cursor: pointer;">
-                        <i class="el-icon-switch-button" @click="goLogin()"></i>
-                        <i class="el-icon-setting" @click="isShowGc=true" v-if="webType == 'highway'"></i>
+                        <el-icon @click="goLogin()"><SwitchButton /></el-icon>
+                        <el-icon @click="isShowGc=true" v-if="webType == 'highway'"><Setting /></el-icon>
                     </li>
                     <b>{{'v'+version}}</b>
                 </div>
@@ -389,9 +389,9 @@
                         </div>
                         <div class="screen-event-list">
                             <ul class="list-th">
-                                <li style="flex:4;"><i class="el-icon-sort"></i>事件类型</li>
-                                <li style="flex:4;"><i class="el-icon-sort"></i>事件位置</li>
-                                <li style="flex:3;"><i class="el-icon-sort"></i>开始时间</li>
+                                <li style="flex:4;"><el-icon><Sort /></el-icon>事件类型</li>
+                                <li style="flex:4;"><el-icon><Sort /></el-icon>事件位置</li>
+                                <li style="flex:3;"><el-icon><Sort /></el-icon>开始时间</li>
                                 <!-- <li style="flex:1.5;">处理状态</li> -->
                             </ul>
                             <div class="list-tr-box" v-anyNameYouLike>
@@ -469,6 +469,7 @@
     </div>
 </template>
 <script setup lang="ts">
+import { Setting, Sort, SwitchButton, User } from '@element-plus/icons-vue';
 import protobuf from "protobufjs";
 import http from '@/api/http';
 import { assetUrl } from '@/tool/assetUrl';

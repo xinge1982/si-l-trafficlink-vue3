@@ -76,7 +76,7 @@
                         <div class="evaluate-date--box">
                             <el-dropdown style="margin-top:15px;margin-left: 15px;" @command="exportCsv">
                                 <el-button type="primary" size="mini">
-                                    {{$t("home.export")}}<i class="el-icon-arrow-down el-icon--right"></i>
+                                    {{$t("home.export")}}<el-icon style="margin-left: 5px;"><ArrowDown /></el-icon>
                                 </el-button>
                                 <template #dropdown>
                                     <el-dropdown-menu>
@@ -98,7 +98,7 @@
                                 </el-date-picker>
                             </div>
                             <div class="week-date-input">
-                                <el-input class="week-picker" v-model="date" prefix-icon="el-icon-date" :placeholder="$t('home.pleaseChoose')"></el-input>
+                                <el-input class="week-picker" v-model="date" :prefix-icon="Calendar" :placeholder="$t('home.pleaseChoose')"></el-input>
                             </div>
                         </div>
                     </div>
@@ -165,6 +165,7 @@
     </div>
 </template>
 <script setup lang="ts">
+import { ArrowDown, Calendar } from '@element-plus/icons-vue';
 import http from '@/api/http';
 import signalState from './signalState.vue';
 import phase from './phase/phase.vue';

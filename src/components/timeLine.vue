@@ -7,19 +7,21 @@
   <div class="timeline_main">
     <div class="timeline_control">
       <div class="menu_play">
-        <i class="menu_icon el-icon-d-arrow-left" :class="{'menu_icon_disabled':playing}" @click="backward"></i>
-        <i
+        <el-icon class="menu_icon" :class="{'menu_icon_disabled':playing}" @click="backward"><DArrowLeft /></el-icon>
+        <el-icon
           class="menu_icon"
-          :class="{'el-icon-video-play':!playing, 'el-icon-video-pause':playing}"
           @click="togglePlay"
           @mouseleave="hoverIndex = -1"
-        ></i>
-        <i class="menu_icon el-icon-d-arrow-right" :class="{'menu_icon_disabled':playing}" @click="forward"></i>
+        >
+          <VideoPlay v-if="!playing" />
+          <VideoPause v-else />
+        </el-icon>
+        <el-icon class="menu_icon" :class="{'menu_icon_disabled':playing}" @click="forward"><DArrowRight /></el-icon>
       </div>
       <div class="menu_setting">
-        <i class="menu_icon el-icon-caret-top" :class="{'menu_icon_disabled':playing}" @click="speedSlow"></i>
+        <el-icon class="menu_icon" :class="{'menu_icon_disabled':playing}" @click="speedSlow"><CaretTop /></el-icon>
         <i class="speed">{{ options.speed +' s'}}</i>
-        <i class="menu_icon el-icon-caret-bottom" :class="{'menu_icon_disabled':playing}" @click="speedQuick"></i>
+        <el-icon class="menu_icon" :class="{'menu_icon_disabled':playing}" @click="speedQuick"><CaretBottom /></el-icon>
       </div>
     </div>
     <div class="timeline_axis">
@@ -39,6 +41,7 @@
   </div>
 </template>
 <script setup lang="ts">
+import { CaretBottom, CaretTop, DArrowLeft, DArrowRight, VideoPause, VideoPlay } from '@element-plus/icons-vue';
 
 
 defineOptions((() => ({

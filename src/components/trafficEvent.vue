@@ -6,7 +6,7 @@
             <div style="flex:1;padding: 30px 40px;display: flex;flex-direction: column;">
                 <div class="event-title">
                     <span>交通事件</span>
-                    <i class="el-icon-close" @click="$parent.isTtafficEvt=false,$parent.trackPlay=true, $parent.autoPolling = true,closeTraffic()"></i>
+                    <el-icon @click="$parent.isTtafficEvt=false,$parent.trackPlay=true, $parent.autoPolling = true,closeTraffic()"><Close /></el-icon>
                 </div>
                 <div class="ect-select-box">
                     <div class="ect-select" v-for="item in types">
@@ -68,7 +68,7 @@
                     <div class="event-mon-box" style="left: auto;right:10px;width: 400px;" v-show="typeCode">
                         <div style="overflow: hidden;margin-bottom: 10px;">
                             <span class="title">{{eventItem.eventName+'详情'}}</span>
-                            <i style="float: right;cursor: pointer;" class="el-icon-close" @click="typeCode=null"></i>
+                            <el-icon style="float: right;cursor: pointer;" @click="typeCode=null"><Close /></el-icon>
                         </div>
                         <div class="event-list">
                             <ul class="list-th">
@@ -147,6 +147,7 @@
     </div>
 </template>
 <script setup lang="ts">
+import { Close } from '@element-plus/icons-vue';
 import http from '@/api/http';
 import eventInfo from './eventInfo.vue';
 import accidentInfo from './accidentInfo.vue';

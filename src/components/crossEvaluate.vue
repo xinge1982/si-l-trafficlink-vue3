@@ -105,7 +105,7 @@
                                     <el-checkbox label="分析时间">{{'分析时间（'+analysisTime1+' 至 '+analysisTime2+'）'}}</el-checkbox>
                                     <el-checkbox label="基准时间">{{'基准时间（'+baseTime1+' 至 '+baseTime2+'）'}}</el-checkbox>
                                 </el-checkbox-group>
-                                <el-button type="primary" size="mini" icon="el-icon-upload2" style="float: right;" @click="exportCsv()" :loading="exportLoading">导出</el-button>
+                                <el-button type="primary" size="mini" :icon="Upload" style="float: right;" @click="exportCsv()" :loading="exportLoading">导出</el-button>
                             </div>
                             <div id="lineEct" style="height: 80%;"></div>
                         </div>
@@ -120,6 +120,7 @@
     </div>
 </template>
 <script setup lang="ts">
+import { Upload } from '@element-plus/icons-vue';
 import http from '@/api/http';
 
 defineOptions((() => {
@@ -344,7 +345,6 @@ return {
                 lock: true,
                 target: '.cross-evaluate-right',
                 text: 'Loading',
-                spinner: 'el-icon-loading',
                 background: 'rgba(13, 20, 27, 0.6)'
             });
 

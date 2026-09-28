@@ -64,7 +64,7 @@
                     </div>
                 </div>
                 <div class="cross-evaluate-right">
-                    <i class="el-icon-close" style="text-align: right;font-size: 18px;cursor: pointer;    font-weight: 800;" @click="$parent.isRoadEval=false"></i>
+                    <el-icon style="text-align: right;font-size: 18px;cursor: pointer;    font-weight: 800;" @click="$parent.isRoadEval=false"><Close /></el-icon>
                     <div class="flex">
                         <div style="flex:1.5;">
                             <p class="cross-evaluate-right-title">
@@ -106,6 +106,7 @@
     </div>
 </template>
 <script setup lang="ts">
+import { Close } from '@element-plus/icons-vue';
 import http from '@/api/http';
 
 defineOptions((() => {
@@ -302,7 +303,6 @@ return {
                 lock: true,
                 target: '.cross-evaluate-right',
                 text: 'Loading',
-                spinner: 'el-icon-loading',
                 background: 'rgba(13, 20, 27, 0.6)'
             });
 

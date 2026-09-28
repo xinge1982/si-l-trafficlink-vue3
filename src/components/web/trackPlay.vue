@@ -6,7 +6,7 @@
             <div class="play_tool">
                 <div class="play_btn_box">
                     <div @click="autoPlay()" style="width: 50px;">
-                        <i :class="play?'el-icon-video-pause':'el-icon-video-play'"></i>
+                        <el-icon><VideoPause v-if="play" /><VideoPlay v-else /></el-icon>
                         <b v-text="play?'暂停':'播放'" style="display: block;"></b>
                     </div>
                     <div style="width: 180px;">
@@ -25,6 +25,7 @@
     </div>
 </template>
 <script setup lang="ts">
+import { VideoPause, VideoPlay } from '@element-plus/icons-vue';
 import http from '@/api/http';
 
 defineOptions((() => {

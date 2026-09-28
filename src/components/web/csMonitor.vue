@@ -18,10 +18,10 @@
         <div class="box list-right-box" style="width:auto;left:0;right:0;top:165px;bottom: 150px;">
             <p class="chart-box-title">
                 <span>
-                    <i class="el-icon-stopwatch"></i>
+                    <el-icon><Stopwatch /></el-icon>
                     <span>车道指标</span>
                 </span>
-                <span style="float: right;font-size: 14px;cursor: pointer;" @click="laneListShow=false"><i class="el-icon-close" style="font-weight: 800;"></i></span>
+                <span style="float: right;font-size: 14px;cursor: pointer;" @click="laneListShow=false"><el-icon style="font-weight: 800;"><Close /></el-icon></span>
             </p>
             <div style="overflow: hidden;">
                 <el-select v-model="rid" placeholder="请选择" style="margin-top: 10px;float: left;width:180px;" @change="getRidLaneFlow">
@@ -49,7 +49,7 @@
         <div class="box box-toggle" @click="laneListShow=true;" style="top: 170px;" :style="'right:'+(laneListShow?'-500px':'20px;')">
             <p class="chart-box-title">
                 <span>
-                    <i class="el-icon-stopwatch"></i>
+                    <el-icon><Stopwatch /></el-icon>
                     <span>车道指标</span>
                 </span>
             </p>
@@ -57,6 +57,7 @@
     </div>
 </template>
 <script setup lang="ts">
+import { Close, Stopwatch } from '@element-plus/icons-vue';
 import http from '@/api/http';
 import trackPlay from './trackPlay.vue';
 

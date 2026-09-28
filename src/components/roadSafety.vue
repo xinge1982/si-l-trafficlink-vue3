@@ -91,19 +91,19 @@
                                     </el-date-picker>
                                 </div>
                                 <div class="data-type-btn" v-show="dataType==1" @click="dataType=2">
-                                    <i class="el-icon-s-grid"></i>
+                                    <el-icon><Grid /></el-icon>
                                     <span>数据统计</span>
                                 </div>
                                 <div class="data-type-btn" v-show="dataType==1" @click="dataType=3">
-                                    <i class="el-icon-s-grid"></i>
+                                    <el-icon><Grid /></el-icon>
                                     <span>事件详情</span>
                                 </div>
                                 <div class="data-type-btn" v-show="dataType==2||dataType==3" @click="dataType=1">
-                                    <i class="el-icon-s-data"></i>
+                                    <el-icon><Histogram /></el-icon>
                                     <span>图表展示</span>
                                 </div>
                                 <div class="data-type-btn" v-show="dataType==2||dataType==3" @click="exportCsv()">
-                                    <i class="el-icon-upload2"></i>
+                                    <el-icon><Upload /></el-icon>
                                     <span>导出</span>
                                 </div>
                             </div>
@@ -169,6 +169,7 @@
     </div>
 </template>
 <script setup lang="ts">
+import { Grid, Histogram, Upload } from '@element-plus/icons-vue';
 import http from '@/api/http';
 import eventInfo from './eventInfo.vue';
 import accidentInfo from './accidentInfo.vue';

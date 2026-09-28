@@ -70,7 +70,7 @@
                                     <li v-for="item in ectTypes[menu.value].type2[0].data" :key="item.value" :class="index==item.value?'active':''" @click="index=item.value">{{item.name}}</li>
                                 </div>
                                 <div class="data-type-btn" @click="exportCsv()">
-                                    <i class="el-icon-upload2"></i>
+                                    <el-icon><Upload /></el-icon>
                                     <span>导出</span>
                                 </div>
                             </div>
@@ -83,6 +83,7 @@
     </div>
 </template>
 <script setup lang="ts">
+import { Upload } from '@element-plus/icons-vue';
 import http from '@/api/http';
 import eventInfo from './eventInfo.vue';
 import accidentInfo from './accidentInfo.vue';

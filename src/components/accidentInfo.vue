@@ -4,7 +4,7 @@
             <div class="a-box-title">
                 <span>{{$t("home.trafficAccidentMonitoring")}} </span>
                 <b>{{accidentData.crossName||accidentInfo.accidentLocation}}</b>
-                <i class="el-icon-close" style="float: right;cursor: pointer;font-size: 18px;" @click="$parent.accidentData=null"></i>
+                <el-icon style="float: right;cursor: pointer;font-size: 18px;" @click="$parent.accidentData=null"><Close /></el-icon>
             </div>
             <div style="flex:1;display: flex;">
                 <div class="a-box">
@@ -13,7 +13,7 @@
                             <p>{{$t("home.evidenceVideo")}}</p>
                             <div class="dir-menu">
                                 <ul v-for="item in options1">
-                                    <i :class="item.id==expandedKeys1?'el-icon-caret-bottom':'el-icon-caret-right'" @click="dirClick1(item)"></i>
+                                    <el-icon @click="dirClick1(item)"><CaretBottom v-if="item.id==expandedKeys1" /><CaretRight v-else /></el-icon>
                                     <span @click="dirClick1(item)">{{item.name}}</span>
                                     <li v-for="t in item.children" v-text="t.name" v-show="item.id==expandedKeys1" :class="t.url==address2?'dirActive':''" @click="handleNodeClick1(t)"></li>
                                 </ul>
@@ -91,7 +91,7 @@
                             <div class="affect-box">
                                 <ul>
                                     <li v-for="item in colors" style="width: 20px;height: 10px;">
-                                        <i class="el-icon-caret-bottom" v-if="item.key==influenceDegree" style="font-size: 16px;margin-left: -5px;"></i>
+                                        <el-icon v-if="item.key==influenceDegree" style="font-size: 16px;margin-left: -5px;"><CaretBottom /></el-icon>
                                     </li>
                                 </ul>
                                 <ul>
@@ -152,6 +152,7 @@
     </div>
 </template>
 <script setup lang="ts">
+import { CaretBottom, CaretRight, Close } from '@element-plus/icons-vue';
 import http from '@/api/http';
 import FlvJs from './video/FlvJs.vue'
 import trackPlayback from './trackPlayback.vue';
